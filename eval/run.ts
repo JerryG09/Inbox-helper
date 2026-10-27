@@ -1,7 +1,7 @@
 // Evaluation runner. Usage:
 //   npm run eval:baseline           deterministic keyword baseline (no network)
 //   npm run eval:llm                genuine Anthropic Messages API call per item
-// The LLM run reads ANTHROPIC_API_KEY (and optional LLM_MODEL) from the process env or the git-ignored .env.local.
+// The LLM run reads ANTHROPIC_API_KEY (and optional ANTHROPIC_MODEL) from the process env or the git-ignored .env.local.
 // It never runs in the browser and never logs the key.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
@@ -25,7 +25,8 @@ function loadEnvLocal() {
   }
 }
 
-const PARAMS = { max_tokens: 400, temperature: 0 };
+// No `temperature`: the API rejects it as deprecated for current models (run 2026-10-27T09-27-22Z, 30/30 failures).
+const PARAMS = { max_tokens: 400 };
 
 async function callAnthropic(model: string, key: string, item: EvalItem) {
   const started = Date.now();
@@ -60,7 +61,7 @@ async function main() {
       console.error("BLOCKED: ANTHROPIC_API_KEY is not set (env or .env.local). No LLM call was made and no results were produced.");
       process.exit(2);
     }
-    const model = process.env.LLM_MODEL ?? "claude-sonnet-5-5";
+    const model = process.env.ANTHROPIC_MODEL || process.env.LLM_MODEL || "claude-sonnet-5-5";
     meta = { kind: "llm", genuineLLM: true, provider: "anthropic", model, promptVersion: PROMPT_VERSION, params: PARAMS, systemPrompt: SYSTEM_PROMPT };
     for (const item of items) {
       const r = await callAnthropic(model, key, item);
