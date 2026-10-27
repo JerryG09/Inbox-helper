@@ -1,13 +1,78 @@
+import type { InboxRecord } from "@/lib/domain/types";
+import { filtered, resolveSelection, stats, type InboxView, type ProcessFilter, type ReviewFilter } from "@/lib/inbox/inbox";
 import type { View } from "@/lib/domain/views";
+import { CandidateReview } from "./CandidateReview";
+import { MessageQueue } from "./MessageQueue";
 
-// No-messages state from renderInbox() in the approved V1.1 HTML. The queue/review layout arrives in UI-03/UI-04.
-export function InboxWorkspace({ onNavigate }: { onNavigate: (view: View) => void }) {
+type Props = {
+  records: InboxRecord[];
+  view: InboxView;
+  onNavigate: (view: View) => void;
+  onSelect: (key: string) => void;
+  onProcessFilter: (v: ProcessFilter) => void;
+  onReviewFilter: (v: ReviewFilter) => void;
+  onAttentionOnly: (v: boolean) => void;
+  onClearFilters: () => void;
+  onFailedQueue: () => void;
+  onBackToList: () => void;
+  onNextPending: () => void;
+};
+
+// Inbox & Review workspace from renderInbox() in the approved V1.1 HTML.
+export function InboxWorkspace(p: Props) {
+  if (!p.records.length) {
+    return (
+      <div className="blank large-blank">
+        <span className="blank-symbol">✉</span>
+        <b>Your inbox is waiting</b>
+        <div className="muted small">Import and process candidate messages to create a review queue.</div>
+        <button className="btn primary" onClick={() => p.onNavigate("import")}>Start with an import →</button>
+      </div>
+    );
+  }
+  const s = stats(p.records);
+  const visible = filtered(p.records, p.view);
+  const selectedKey = resolveSelection(visible, p.view.selectedKey);
+  const view = { ...p.view, selectedKey };
+  const record = p.records.find((r) => r.key === selectedKey) ?? null;
+
   return (
-    <div className="blank large-blank">
-      <span className="blank-symbol">✉</span>
-      <b>Your inbox is waiting</b>
-      <div className="muted small">Import and process candidate messages to create a review queue.</div>
-      <button className="btn primary" onClick={() => onNavigate("import")}>Start with an import →</button>
+    <>
+      <Metrics s={s} />
+      <div className="work-toolbar">
+        <div>
+          <div className="work-toolbar-title">Review workspace <span className="badge">{`${s.completed} AI results`}</span></div>
+          <div className="work-toolbar-sub">{`${s.approved} approved · ${s.rejected} rejected drafts · ${s.attention} flagged`}</div>
+        </div>
+        <div className="actions">
+          <button className="btn small" onClick={p.onFailedQueue}>{`Failed queue (${s.failed})`}</button>
+          {/* Retry is UI-05; shown with the approved enabled/disabled state but inert. */}
+          <button className="btn small" disabled={!s.failed}>Retry failed</button>
+          <button className="btn small primary" onClick={() => p.onNavigate("results")}>View results ↗</button>
+        </div>
+      </div>
+      <div className={`workgrid ${view.mobileDetail ? "mobile-detail-open" : ""}`}>
+        <MessageQueue
+          visible={visible} total={s.total} view={view} stats={s}
+          onSelect={p.onSelect} onProcessFilter={p.onProcessFilter} onReviewFilter={p.onReviewFilter}
+          onAttentionOnly={p.onAttentionOnly} onClearFilters={p.onClearFilters} onViewResults={() => p.onNavigate("results")}
+        />
+        <section className="rightpane">
+          <CandidateReview r={record} onBackToList={p.onBackToList} onNextPending={p.onNextPending} />
+          <div id="draft-change-indicator" className="muted tiny" aria-live="polite"></div>
+        </section>
+      </div>
+    </>
+  );
+}
+
+export function Metrics({ s }: { s: ReturnType<typeof stats> }) {
+  return (
+    <div className="metrics">
+      <div className="metric"><div className="metric-top"><span>Total messages</span><span className="metric-icon violet">▣</span></div><div className="number">{s.total}<span className="metric-unit"> in batch</span></div><div className="metric-bottom">Validated input records</div></div>
+      <div className="metric"><div className="metric-top"><span>AI completed</span><span className="metric-icon teal">✦</span></div><div className="number">{s.completed}<span className="metric-unit"> processed</span></div><div className="metric-bottom">Ready for human inspection</div></div>
+      <div className="metric"><div className="metric-top"><span>Awaiting review</span><span className="metric-icon amber">◷</span></div><div className="number">{s.pending}<span className="metric-unit"> pending</span></div><div className="metric-bottom">Recruiter decisions needed</div></div>
+      <div className="metric"><div className="metric-top"><span>AI failures</span><span className="metric-icon red">!</span></div><div className="number">{s.failed}<span className="metric-unit"> failed</span></div><div className="metric-bottom">Recover without restarting</div></div>
     </div>
   );
 }

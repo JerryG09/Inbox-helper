@@ -56,4 +56,8 @@ export type InboxRecord = {
   currentAttentionReasons: string[];
   historicalAiFindings: string[];
   needsRecheck: boolean;
+  // Who produced the classification/draft. Simulated sources are never a real model response.
+  outcomeSource?: OutcomeSource;
 };
+
+export type OutcomeSource = "simulated_fixture" | "simulated_fallback" | "anthropic";

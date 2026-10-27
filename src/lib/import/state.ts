@@ -1,5 +1,5 @@
 import type { InboxRecord, InvalidRow, PreviewRow, RawRow, ValidMessage } from "../domain/types";
-import { toQueuedRecords } from "../processing/processor";
+import { applyOutcome, toQueuedRecords, type ProcessOutcome } from "../processing/processor";
 import { validate } from "./validate";
 
 // Import screen state (prototype: importMode/preview/valid/invalid/records/processing). Pure transitions.
@@ -38,4 +38,15 @@ export function beginProcessing(s: ImportState): ImportState {
 
 export function cancelProcessing(s: ImportState): ImportState {
   return { ...s, processing: false, records: [] };
+}
+
+// Queued → processing for every queued record (the batch has been handed to the processor).
+export function markProcessing(s: ImportState): ImportState {
+  return { ...s, records: s.records.map((r) => (r.processing === "queued" ? { ...r, processing: "processing" } : r)) };
+}
+
+// Processor outcomes → completed/failed records; the processing view closes. Records without an outcome stay as they are.
+export function applyOutcomes(s: ImportState, outcomes: readonly ProcessOutcome[]): ImportState {
+  const byKey = new Map(outcomes.map((o) => [o.key, o]));
+  return { ...s, processing: false, records: s.records.map((r) => (byKey.has(r.key) ? applyOutcome(r, byKey.get(r.key)!) : r)) };
 }

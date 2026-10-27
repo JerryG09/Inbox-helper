@@ -11,7 +11,7 @@ import pixelmatch from "pixelmatch";
 const REF = path.resolve("reference/hifi-v1.1");
 const CANONICAL = "file://" + path.join(REF, "prototype/MUST-Inbox-Helper-HiFi-V1.1-APPROVED.html");
 const OUT = path.resolve("test/visual/artifacts");
-const REPORT = path.resolve("docs/evidence/ui-02/parity-report.json");
+const REPORT = path.resolve("docs/evidence/ui-03/parity-report.json");
 mkdirSync(OUT, { recursive: true });
 
 type Step = (page: Page) => Promise<void>;
@@ -21,6 +21,13 @@ const FIXTURES = path.resolve("test/fixtures/csv");
 const click = (text: string): Step => (page) => page.getByRole("button", { name: text, exact: true }).click();
 const upload = (file: string): Step => (page) => page.setInputFiles("#csvFile", path.join(FIXTURES, file));
 const seq = (...steps: Step[]): Step => async (page) => { for (const s of steps) await s(page); };
+
+const clickIfVisible = (text: string): Step => async (page) => {
+  const b = page.getByRole("button", { name: text, exact: true });
+  if (await b.isVisible()) await b.click(); // "← All messages" is hidden above 900 px by the approved CSS
+};
+const pick = (name: string): Step => (page) => page.locator(".message", { hasText: name }).click();
+const REVEAL: Step = seq(click("Load 6-message sample"), click("Process 6 valid messages →"), click("Reveal simulated AI results →"));
 
 // Each state is reached by the same user steps in the app and in the approved HTML.
 const STATES: Record<string, Step> = {
@@ -43,12 +50,37 @@ const STATES: Record<string, Step> = {
   "import-processing-queued": seq(click("Load 6-message sample"), click("Process 6 valid messages →")),
   "import-processing-cancelled": seq(click("Load 6-message sample"), click("Process 6 valid messages →"), click("Cancel simulation")),
   "inbox-empty": (page) => page.click("#nav-inbox"),
+  "inbox-queued-before-reveal": seq(click("Load 6-message sample"), click("Process 6 valid messages →"), (page) => page.click("#nav-inbox")),
+  "inbox-sample-revealed": REVEAL,
+  "inbox-select-multi-intent": seq(REVEAL, pick("David Chen")),
+  "inbox-select-blocked": seq(REVEAL, pick("Sarah James")),
+  "inbox-review-filter-all": seq(REVEAL, async (page) => { await page.selectOption("#reviewFilterSelect", "All"); }),
+  "inbox-failed-queue": seq(REVEAL, click("Failed queue (1)")),
+  "inbox-failed-detail": seq(REVEAL, click("Failed queue (1)"), pick("Fatima Yusuf")),
+  "inbox-attention-only": seq(REVEAL, (page) => page.check(".checkline input")),
+  "inbox-no-match": seq(REVEAL, async (page) => { await page.selectOption("#reviewFilterSelect", "Approved"); }),
+  "inbox-next-pending": seq(REVEAL, pick("Ada Okafor"), click("Next pending →")),
+  "inbox-mobile-detail-open": seq(REVEAL, pick("Grace Bello")),
+  "inbox-detail-ada": seq(REVEAL, pick("Ada Okafor")),
+  "inbox-mobile-back-to-list": seq(REVEAL, pick("Grace Bello"), clickIfVisible("← All messages")),
+  "inbox-custom-id-collision": seq(
+    async (page) => { await page.fill("#manual-id", "M001"); await page.fill("#manual-name", "Ada Okafor"); await page.fill("#manual-subject", "Interview change"); await page.fill("#manual-message", "Please withdraw my application."); },
+    click("Validate manual message"), click("Process 1 valid messages →"), click("Reveal simulated AI results →"),
+  ),
+  "inbox-after-failed-import": seq(REVEAL, (page) => page.click("#nav-import"), upload("malformed.csv"), (page) => page.click("#nav-inbox")),
   "results-empty": (page) => page.click("#nav-results"),
 };
 const WIDTHS: [number, number][] = [[1440, 900], [390, 844], [320, 700], [768, 1024]];
 const FROZEN: Record<string, string> = {
   "import-empty-1440": "screenshots/desktop/01-import-empty-1440.png",
   "import-empty-390": "screenshots/mobile/01-import-empty-390.png",
+  "inbox-sample-revealed-1440": "screenshots/desktop/02-inbox-review-1440.png",
+  "inbox-sample-revealed-390": "screenshots/mobile/02-inbox-list-390.png",
+  "inbox-detail-ada-390": "screenshots/mobile/03-review-detail-390.png",
+  "inbox-detail-ada-320": "screenshots/mobile/06-detail-320.png",
+  "inbox-detail-ada-768": "screenshots/mobile/07-detail-768.png",
+  "inbox-select-blocked-1440": "screenshots/desktop/03-blocked-draft-1440.png",
+  "inbox-select-blocked-390": "screenshots/mobile/04-blocked-detail-390.png",
 };
 const CASES: Case[] = Object.entries(STATES).flatMap(([state, steps]) =>
   WIDTHS.map(([width, height]) => ({ name: `${state}-${width}`, width, height, steps, frozen: FROZEN[`${state}-${width}`] })),
@@ -61,6 +93,9 @@ async function capture(page: Page, url: string, steps: Step) {
   await steps(page);
   await page.evaluate(() => document.fonts.ready);
   await page.mouse.move(0, 0);
+  // Normalize scroll: full-page captures include the sticky sidebar at the current scroll offset, and Playwright's
+  // click-into-view can leave the two pages 1 px apart (observed on "Next pending"). Content is unaffected.
+  await page.evaluate(() => window.scrollTo(0, 0));
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   return { png: PNG.sync.read(await page.screenshot({ fullPage: true, animations: "disabled" })), overflow };
 }
