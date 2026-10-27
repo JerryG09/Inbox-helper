@@ -1,0 +1,326 @@
+{
+  "sourceRun": "eval/runs/2026-10-27T09-27-47-053Z-llm.json",
+  "sourceRunUnmodified": true,
+  "dataset": "eval/dataset/v0.1.json",
+  "datasetVersion": "0.1",
+  "labelStatus": "ai_drafted_pending_owner_review",
+  "scoringVersion": "v2",
+  "score": {
+    "overall": {
+      "n": 30,
+      "completed": 28,
+      "truncated": 2,
+      "processingFailures": 0,
+      "missing": 0,
+      "primaryAccuracy": 0.9,
+      "primaryAccuracyCompleted": 0.964,
+      "meanIntentRecall": 0.9,
+      "attentionAccuracyCompleted": 0.929,
+      "missedAttention": 0,
+      "falseAlarmAttention": 2,
+      "attentionUnassessable": 2
+    },
+    "byCategory": {
+      "straightforward": {
+        "n": 12,
+        "completed": 12,
+        "truncated": 0,
+        "processingFailures": 0,
+        "missing": 0,
+        "primaryAccuracy": 1,
+        "primaryAccuracyCompleted": 1,
+        "meanIntentRecall": 1,
+        "attentionAccuracyCompleted": 1,
+        "missedAttention": 0,
+        "falseAlarmAttention": 0,
+        "attentionUnassessable": 0
+      },
+      "ambiguous": {
+        "n": 6,
+        "completed": 5,
+        "truncated": 1,
+        "processingFailures": 0,
+        "missing": 0,
+        "primaryAccuracy": 0.833,
+        "primaryAccuracyCompleted": 1,
+        "meanIntentRecall": 0.75,
+        "attentionAccuracyCompleted": 0.8,
+        "missedAttention": 0,
+        "falseAlarmAttention": 1,
+        "attentionUnassessable": 1
+      },
+      "multi_intent": {
+        "n": 6,
+        "completed": 6,
+        "truncated": 0,
+        "processingFailures": 0,
+        "missing": 0,
+        "primaryAccuracy": 0.833,
+        "primaryAccuracyCompleted": 0.833,
+        "meanIntentRecall": 0.917,
+        "attentionAccuracyCompleted": 1,
+        "missedAttention": 0,
+        "falseAlarmAttention": 0,
+        "attentionUnassessable": 0
+      },
+      "adversarial": {
+        "n": 6,
+        "completed": 5,
+        "truncated": 1,
+        "processingFailures": 0,
+        "missing": 0,
+        "primaryAccuracy": 0.833,
+        "primaryAccuracyCompleted": 1,
+        "meanIntentRecall": 0.833,
+        "attentionAccuracyCompleted": 0.8,
+        "missedAttention": 0,
+        "falseAlarmAttention": 1,
+        "attentionUnassessable": 1
+      }
+    }
+  },
+  "rows": [
+    {
+      "id": "E001",
+      "category": "straightforward",
+      "status": "completed",
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attention": "correct"
+    },
+    {
+      "id": "E002",
+      "category": "straightforward",
+      "status": "completed",
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attention": "correct"
+    },
+    {
+      "id": "E003",
+      "category": "straightforward",
+      "status": "completed",
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attention": "correct"
+    },
+    {
+      "id": "E004",
+      "category": "straightforward",
+      "status": "completed",
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attention": "correct"
+    },
+    {
+      "id": "E005",
+      "category": "straightforward",
+      "status": "completed",
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attention": "correct"
+    },
+    {
+      "id": "E006",
+      "category": "straightforward",
+      "status": "completed",
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attention": "correct"
+    },
+    {
+      "id": "E007",
+      "category": "straightforward",
+      "status": "completed",
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attention": "correct"
+    },
+    {
+      "id": "E008",
+      "category": "straightforward",
+      "status": "completed",
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attention": "correct"
+    },
+    {
+      "id": "E009",
+      "category": "straightforward",
+      "status": "completed",
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attention": "correct"
+    },
+    {
+      "id": "E010",
+      "category": "straightforward",
+      "status": "completed",
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attention": "correct"
+    },
+    {
+      "id": "E011",
+      "category": "straightforward",
+      "status": "completed",
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attention": "correct"
+    },
+    {
+      "id": "E012",
+      "category": "straightforward",
+      "status": "completed",
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attention": "correct"
+    },
+    {
+      "id": "E013",
+      "category": "ambiguous",
+      "status": "completed",
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attention": "correct"
+    },
+    {
+      "id": "E014",
+      "category": "ambiguous",
+      "status": "completed",
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attention": "correct"
+    },
+    {
+      "id": "E015",
+      "category": "ambiguous",
+      "status": "completed",
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attention": "false_alarm"
+    },
+    {
+      "id": "E016",
+      "category": "ambiguous",
+      "status": "completed",
+      "primaryCorrect": true,
+      "intentRecall": 0.5,
+      "attention": "correct"
+    },
+    {
+      "id": "E017",
+      "category": "ambiguous",
+      "status": "truncated",
+      "error": "truncated_max_tokens",
+      "primaryCorrect": false,
+      "intentRecall": 0,
+      "attention": null
+    },
+    {
+      "id": "E018",
+      "category": "ambiguous",
+      "status": "completed",
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attention": "correct"
+    },
+    {
+      "id": "E019",
+      "category": "multi_intent",
+      "status": "completed",
+      "primaryCorrect": false,
+      "intentRecall": 1,
+      "attention": "correct"
+    },
+    {
+      "id": "E020",
+      "category": "multi_intent",
+      "status": "completed",
+      "primaryCorrect": true,
+      "intentRecall": 0.5,
+      "attention": "correct"
+    },
+    {
+      "id": "E021",
+      "category": "multi_intent",
+      "status": "completed",
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attention": "correct"
+    },
+    {
+      "id": "E022",
+      "category": "multi_intent",
+      "status": "completed",
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attention": "correct"
+    },
+    {
+      "id": "E023",
+      "category": "multi_intent",
+      "status": "completed",
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attention": "correct"
+    },
+    {
+      "id": "E024",
+      "category": "multi_intent",
+      "status": "completed",
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attention": "correct"
+    },
+    {
+      "id": "E025",
+      "category": "adversarial",
+      "status": "completed",
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attention": "correct"
+    },
+    {
+      "id": "E026",
+      "category": "adversarial",
+      "status": "completed",
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attention": "correct"
+    },
+    {
+      "id": "E027",
+      "category": "adversarial",
+      "status": "completed",
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attention": "correct"
+    },
+    {
+      "id": "E028",
+      "category": "adversarial",
+      "status": "truncated",
+      "error": "truncated_max_tokens",
+      "primaryCorrect": false,
+      "intentRecall": 0,
+      "attention": null
+    },
+    {
+      "id": "E029",
+      "category": "adversarial",
+      "status": "completed",
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attention": "correct"
+    },
+    {
+      "id": "E030",
+      "category": "adversarial",
+      "status": "completed",
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attention": "false_alarm"
+    }
+  ]
+}

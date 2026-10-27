@@ -44,7 +44,8 @@ describe("baseline + scoring", () => {
   });
   it("counts a null output as a failure, never as correct", () => {
     const r = score(dataset.items.slice(0, 2), [{ id: dataset.items[0]!.id, output: null, error: "x" }]);
-    expect(r.overall.failures).toBe(2);
+    expect(r.overall.processingFailures).toBe(1);
+    expect(r.overall.missing).toBe(1);
     expect(r.overall.primaryAccuracy).toBe(0);
   });
 });

@@ -1,0 +1,100 @@
+{
+  "sourceRun": "eval/runs/2026-10-27T09-59-39-835Z-llm-recovery.json",
+  "sourceRunUnmodified": true,
+  "dataset": "eval/dataset/v0.2.json",
+  "datasetVersion": "0.2",
+  "labelStatus": "proposed_v0.2_pending_owner_review",
+  "scoringVersion": "v2",
+  "score": {
+    "overall": {
+      "n": 2,
+      "completed": 2,
+      "truncated": 0,
+      "processingFailures": 0,
+      "missing": 0,
+      "primaryAccuracy": 1,
+      "primaryAccuracyCompleted": 1,
+      "meanIntentRecall": 0.5,
+      "attentionAccuracyCompleted": 1,
+      "missedAttention": 0,
+      "falseAlarmAttention": 0,
+      "attentionUnassessable": 0
+    },
+    "byCategory": {
+      "straightforward": {
+        "n": 0,
+        "completed": 0,
+        "truncated": 0,
+        "processingFailures": 0,
+        "missing": 0,
+        "primaryAccuracy": null,
+        "primaryAccuracyCompleted": null,
+        "meanIntentRecall": null,
+        "attentionAccuracyCompleted": null,
+        "missedAttention": 0,
+        "falseAlarmAttention": 0,
+        "attentionUnassessable": 0
+      },
+      "ambiguous": {
+        "n": 1,
+        "completed": 1,
+        "truncated": 0,
+        "processingFailures": 0,
+        "missing": 0,
+        "primaryAccuracy": 1,
+        "primaryAccuracyCompleted": 1,
+        "meanIntentRecall": 1,
+        "attentionAccuracyCompleted": 1,
+        "missedAttention": 0,
+        "falseAlarmAttention": 0,
+        "attentionUnassessable": 0
+      },
+      "multi_intent": {
+        "n": 0,
+        "completed": 0,
+        "truncated": 0,
+        "processingFailures": 0,
+        "missing": 0,
+        "primaryAccuracy": null,
+        "primaryAccuracyCompleted": null,
+        "meanIntentRecall": null,
+        "attentionAccuracyCompleted": null,
+        "missedAttention": 0,
+        "falseAlarmAttention": 0,
+        "attentionUnassessable": 0
+      },
+      "adversarial": {
+        "n": 1,
+        "completed": 1,
+        "truncated": 0,
+        "processingFailures": 0,
+        "missing": 0,
+        "primaryAccuracy": 1,
+        "primaryAccuracyCompleted": 1,
+        "meanIntentRecall": 0,
+        "attentionAccuracyCompleted": 1,
+        "missedAttention": 0,
+        "falseAlarmAttention": 0,
+        "attentionUnassessable": 0
+      }
+    }
+  },
+  "rows": [
+    {
+      "id": "E017",
+      "category": "ambiguous",
+      "status": "completed",
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attention": "correct"
+    },
+    {
+      "id": "E028",
+      "category": "adversarial",
+      "status": "completed",
+      "primaryCorrect": true,
+      "intentRecall": 0,
+      "attention": "correct"
+    }
+  ]
+}

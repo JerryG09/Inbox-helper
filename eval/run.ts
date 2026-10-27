@@ -1,21 +1,31 @@
 // Evaluation runner. Usage:
-//   npm run eval:baseline           deterministic keyword baseline (no network)
-//   npm run eval:llm                genuine Anthropic Messages API call per item
+//   npm run eval:baseline                       deterministic keyword baseline (no network)
+//   npm run eval:llm                            genuine Anthropic Messages API call per item
+//   npm run eval:llm -- --ids E017,E028 --max-tokens 800 --tag recovery
+//                                               bounded subset run, saved as a separate file
+// Options: --dataset <path> (default eval/dataset/v0.1.json), --ids, --max-tokens (default 400), --tag.
 // The LLM run reads ANTHROPIC_API_KEY (and optional ANTHROPIC_MODEL) from the process env or the git-ignored .env.local.
 // It never runs in the browser and never logs the key.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
+import { parseArgs } from "node:util";
 import { classifyBaseline } from "../src/lib/classify/baseline";
 import { PROMPT_VERSION, SYSTEM_PROMPT, userPrompt } from "../src/lib/classify/prompt";
-import { ClassificationSchema } from "../src/lib/domain/intents";
+import { interpret } from "../src/lib/eval/interpret";
 import { score, type EvalItem, type Prediction } from "../src/lib/eval/score";
 
-const DATASET = "eval/dataset/v0.1.json";
-const mode = process.argv[2];
-if (mode !== "baseline" && mode !== "llm") throw new Error("usage: run.ts baseline|llm");
+const { positionals, values } = parseArgs({
+  allowPositionals: true,
+  options: { dataset: { type: "string" }, ids: { type: "string" }, "max-tokens": { type: "string" }, tag: { type: "string" } },
+});
+const mode = positionals[0];
+if (mode !== "baseline" && mode !== "llm") throw new Error("usage: run.ts baseline|llm [--ids ..] [--max-tokens n] [--tag t] [--dataset p]");
 
+const DATASET = values.dataset ?? "eval/dataset/v0.1.json";
 const dataset = JSON.parse(readFileSync(DATASET, "utf8")) as { version: string; label_status: string; items: EvalItem[] };
-const items = dataset.items;
+const requestedIds = values.ids?.split(",").map((s) => s.trim()).filter(Boolean);
+const items = requestedIds ? dataset.items.filter((i) => requestedIds.includes(i.id)) : dataset.items;
+if (requestedIds && items.length !== requestedIds.length) throw new Error(`unknown id(s) in --ids: ${requestedIds.join(",")}`);
 
 function loadEnvLocal() {
   if (!existsSync(".env.local")) return;
@@ -26,7 +36,8 @@ function loadEnvLocal() {
 }
 
 // No `temperature`: the API rejects it as deprecated for current models (run 2026-10-27T09-27-22Z, 30/30 failures).
-const PARAMS = { max_tokens: 400 };
+const PARAMS = { max_tokens: Number(values["max-tokens"] ?? 400) };
+if (!Number.isInteger(PARAMS.max_tokens) || PARAMS.max_tokens < 1) throw new Error("--max-tokens must be a positive integer");
 
 async function callAnthropic(model: string, key: string, item: EvalItem) {
   const started = Date.now();
@@ -65,34 +76,24 @@ async function main() {
     meta = { kind: "llm", genuineLLM: true, provider: "anthropic", model, promptVersion: PROMPT_VERSION, params: PARAMS, systemPrompt: SYSTEM_PROMPT };
     for (const item of items) {
       const r = await callAnthropic(model, key, item);
-      let output = null;
-      let error = r.error;
-      let validationIssues: unknown;
-      if (!error) {
-        try {
-          const parsed = ClassificationSchema.safeParse(JSON.parse(r.text ?? ""));
-          if (parsed.success) output = parsed.data;
-          else { error = "schema_validation_failed"; validationIssues = parsed.error.issues; }
-        } catch {
-          error = "invalid_json";
-        }
-      }
-      predictions.push({ id: item.id, output, error });
-      records.push({ id: item.id, ...r, parsed: output, error, validationIssues });
-      console.log(`${item.id} ${error ? "FAIL " + error : output!.primary_intent} (${r.latencyMs} ms)`);
+      const { validationIssues, ...prediction } = interpret({ id: item.id, ...r });
+      predictions.push(prediction);
+      records.push({ id: item.id, ...r, parsed: prediction.output, error: prediction.error, errorKind: prediction.errorKind, validationIssues });
+      console.log(`${item.id} ${prediction.error ? "FAIL " + prediction.error : prediction.output!.primary_intent} (${r.latencyMs} ms, stop=${r.stopReason ?? "-"})`);
     }
   }
 
   const result = score(items, predictions);
   const run = {
-    startedAt, finishedAt: new Date().toISOString(), dataset: DATASET, datasetVersion: dataset.version,
-    labelStatus: dataset.label_status, inputIds: items.map((i) => i.id), ...meta,
-    predictions, records, score: { overall: result.overall, byCategory: result.byCategory }, rows: result.rows,
+    startedAt, finishedAt: new Date().toISOString(), tag: values.tag ?? null, subset: requestedIds ?? null,
+    dataset: DATASET, datasetVersion: dataset.version, labelStatus: dataset.label_status, inputIds: items.map((i) => i.id), ...meta,
+    predictions, records, scoringVersion: result.scoringVersion, score: { overall: result.overall, byCategory: result.byCategory }, rows: result.rows,
   };
   mkdirSync("eval/runs", { recursive: true });
-  const file = path.join("eval/runs", `${startedAt.replace(/[:.]/g, "-")}-${mode}.json`);
-  writeFileSync(file, JSON.stringify(run, null, 2) + "\n");
-  console.log(JSON.stringify(run.score, null, 2));
+  const suffix = [mode, values.tag].filter(Boolean).join("-");
+  const file = path.join("eval/runs", `${startedAt.replace(/[:.]/g, "-")}-${suffix}.json`);
+  writeFileSync(file, JSON.stringify(run, null, 2) + "\n", { flag: "wx" }); // never overwrite an existing run
+  console.log(JSON.stringify(run.score.overall, null, 2));
   console.log(`Written ${file}`);
 }
 

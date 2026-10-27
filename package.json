@@ -13,7 +13,8 @@
     "verify:reference": "node scripts/verify-reference.mjs",
     "test:visual": "playwright test",
     "eval:baseline": "tsx eval/run.ts baseline",
-    "eval:llm": "tsx eval/run.ts llm"
+    "eval:llm": "tsx eval/run.ts llm",
+    "eval:rescore": "tsx eval/rescore.ts"
   },
   "dependencies": {
     "next": "16.4.3",
