@@ -19,7 +19,7 @@
 ## Experiment files — preserve unchanged
 
 - `eval/runs/2026-10-27T09-07-17-583Z-baseline.json`: deterministic keyword baseline, not AI.
-- `eval/runs/2026-10-27T09-27-22-013Z-llm.json`: 30/30 API request failures (deprecated temperature + wrong variable precedence).
+- `eval/runs/2026-10-27T09-27-22-013Z-llm.json`: 30/30 API requests failed because of the deprecated `temperature` parameter. Separately, an environment-variable mismatch caused the wrong model to be selected; this was not the cause of the request failures.
 - `eval/runs/2026-10-27T09-27-47-053Z-llm.json`: genuine Anthropic Haiku 5.5 Run 2, 28 completed and 2 truncated.
 - `eval/runs/2026-10-27T09-59-39-835Z-llm-recovery.json`: only E017/E028 rerun with `max_tokens:800`; both completed.
 - `eval/rescored/`: scoring v2 re-interpretation files; original raw runs remain intact.
