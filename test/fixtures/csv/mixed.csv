@@ -1,0 +1,8 @@
+﻿id,candidate_name,subject,message
+C001,Valid One,Hi,Valid message
+C002,Empty Msg,Blank,
+C001,Dup,Again,Duplicate id
+,No Id,x,No id here
+bad id!,Bad,x,Bad id
+C006,Extra,x,Too,many,columns
+C007,Valid Two,Hi,Second valid

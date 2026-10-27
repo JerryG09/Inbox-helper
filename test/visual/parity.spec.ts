@@ -11,26 +11,54 @@ import pixelmatch from "pixelmatch";
 const REF = path.resolve("reference/hifi-v1.1");
 const CANONICAL = "file://" + path.join(REF, "prototype/MUST-Inbox-Helper-HiFi-V1.1-APPROVED.html");
 const OUT = path.resolve("test/visual/artifacts");
-const REPORT = path.resolve("docs/evidence/day1-01/parity-report.json");
+const REPORT = path.resolve("docs/evidence/ui-02/parity-report.json");
 mkdirSync(OUT, { recursive: true });
 
-type Case = { name: string; width: number; height: number; view: "import" | "inbox" | "results"; frozen?: string };
-const CASES: Case[] = [
-  { name: "import-empty-1440", width: 1440, height: 900, view: "import", frozen: "screenshots/desktop/01-import-empty-1440.png" },
-  { name: "import-empty-390", width: 390, height: 844, view: "import", frozen: "screenshots/mobile/01-import-empty-390.png" },
-  { name: "import-empty-320", width: 320, height: 700, view: "import" },
-  { name: "import-empty-768", width: 768, height: 1024, view: "import" },
-  { name: "inbox-empty-1440", width: 1440, height: 900, view: "inbox" },
-  { name: "inbox-empty-390", width: 390, height: 844, view: "inbox" },
-  { name: "results-empty-1440", width: 1440, height: 900, view: "results" },
-  { name: "results-empty-390", width: 390, height: 844, view: "results" },
-];
+type Step = (page: Page) => Promise<void>;
+type Case = { name: string; width: number; height: number; steps: Step; frozen?: string };
+
+const FIXTURES = path.resolve("test/fixtures/csv");
+const click = (text: string): Step => (page) => page.getByRole("button", { name: text, exact: true }).click();
+const upload = (file: string): Step => (page) => page.setInputFiles("#csvFile", path.join(FIXTURES, file));
+const seq = (...steps: Step[]): Step => async (page) => { for (const s of steps) await s(page); };
+
+// Each state is reached by the same user steps in the app and in the approved HTML.
+const STATES: Record<string, Step> = {
+  "import-empty": async () => {},
+  "import-sample-preview": click("Load 6-message sample"),
+  "import-invalid-sample-preview": click("Test invalid rows"),
+  "import-csv-mixed-preview": upload("mixed.csv"),
+  "import-csv-valid-preview": upload("valid.csv"),
+  "import-parse-error-malformed": upload("malformed.csv"),
+  "import-parse-error-missing-column": upload("missing-message-column.csv"),
+  "import-parse-error-empty": upload("empty.csv"),
+  "import-manual-valid-preview": async (page) => {
+    await page.fill("#manual-id", "M101");
+    await page.fill("#manual-name", "Example Person");
+    await page.fill("#manual-subject", "Synthetic enquiry");
+    await page.fill("#manual-message", "Is the role remote?");
+    await click("Validate manual message")(page);
+  },
+  "import-manual-invalid-preview": click("Validate manual message"),
+  "import-processing-queued": seq(click("Load 6-message sample"), click("Process 6 valid messages →")),
+  "import-processing-cancelled": seq(click("Load 6-message sample"), click("Process 6 valid messages →"), click("Cancel simulation")),
+  "inbox-empty": (page) => page.click("#nav-inbox"),
+  "results-empty": (page) => page.click("#nav-results"),
+};
+const WIDTHS: [number, number][] = [[1440, 900], [390, 844], [320, 700], [768, 1024]];
+const FROZEN: Record<string, string> = {
+  "import-empty-1440": "screenshots/desktop/01-import-empty-1440.png",
+  "import-empty-390": "screenshots/mobile/01-import-empty-390.png",
+};
+const CASES: Case[] = Object.entries(STATES).flatMap(([state, steps]) =>
+  WIDTHS.map(([width, height]) => ({ name: `${state}-${width}`, width, height, steps, frozen: FROZEN[`${state}-${width}`] })),
+);
 
 const results: Record<string, unknown> = {};
 
-async function capture(page: Page, url: string, view: Case["view"]) {
+async function capture(page: Page, url: string, steps: Step) {
   await page.goto(url);
-  if (view !== "import") await page.click(`#nav-${view}`);
+  await steps(page);
   await page.evaluate(() => document.fonts.ready);
   await page.mouse.move(0, 0);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
@@ -50,8 +78,8 @@ function diff(a: PNG, b: PNG, file: string) {
 for (const c of CASES) {
   test(c.name, async ({ page }) => {
     await page.setViewportSize({ width: c.width, height: c.height });
-    const app = await capture(page, "/", c.view);
-    const canon = await capture(page, CANONICAL, c.view);
+    const app = await capture(page, "/", c.steps);
+    const canon = await capture(page, CANONICAL, c.steps);
     writeFileSync(path.join(OUT, `${c.name}.app.png`), PNG.sync.write(app.png));
     writeFileSync(path.join(OUT, `${c.name}.canonical-live.png`), PNG.sync.write(canon.png));
 
