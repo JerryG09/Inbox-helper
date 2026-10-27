@@ -110,12 +110,57 @@ test("mobile: detail actions are below the draft, Jump to reply, back keeps edit
   await expect(page.locator("#draftEditor")).toHaveValue("Hi Grace, we will share an update soon.");
 });
 
-test("documents approved-design behavior: mobile detail has no way back after the last Pending decision", async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await reveal(page);
-  await pick(page, "Ada Okafor");
-  for (let i = 0; i < 5; i++) await btn(page, "Reject draft").click();
-  await expect(page.getByText("Select a message")).toBeVisible();
-  await expect(btn(page, "← All messages")).toHaveCount(0);
-  await expect(page.locator(".leftpane")).toBeHidden();
-});
+// UX-04-01 regression (owner-approved correction; replaces the earlier test that documented the dead end).
+for (const [width, height] of [[320, 700], [390, 844], [768, 1024], [900, 1000], [1440, 900]] as const) {
+  const mobile = width <= 900;
+  test(`UX-04-01 @${width}: final approval/rejection returns to the list with an accurate completion state`, async ({ page }) => {
+    await page.setViewportSize({ width, height });
+    await reveal(page);
+    await pick(page, "Ada Okafor");
+    await page.fill("#draftEditor", "Hi Ada, edited by a human.");
+    await btn(page, "Approve draft").click();
+    // A remaining Pending record is still auto-selected and stays open.
+    await expect(page.locator(".message.active .name")).toHaveText("David Chen");
+    if (mobile) await expect(page.locator(".rightpane")).toBeVisible();
+    await btn(page, "Reject draft").click(); // David → next Pending in batch order is Sarah (M003)
+    await expect(page.locator(".message.active .name")).toHaveText("Sarah James");
+    await page.fill("#draftEditor", "Hi Sarah, we will ask the recruitment team for an update.");
+    await btn(page, "Run limited mock check").click();
+    await btn(page, "Approve draft").click(); // → Grace
+    await expect(page.locator(".message.active .name")).toHaveText("Grace Bello");
+    await btn(page, "Reject draft").click(); // → Chidi
+    await expect(page.locator(".message.active .name")).toHaveText("Chidi Okoro");
+    await btn(page, "Approve draft").click(); // final Pending decision
+    await expect(page.getByText("All AI-completed messages reviewed")).toBeVisible();
+    await expect(page.getByText("3 approved, 2 rejected. 1 AI failure(s) still require attention.")).toBeVisible();
+    await expect(btn(page, "Review batch results →")).toBeVisible();
+    await expect(page.locator(".leftpane")).toBeVisible();
+    await expect(page.locator("#pageTitle")).toHaveText("Inbox & human review"); // no automatic navigation
+    if (mobile) {
+      await expect(page.locator(".rightpane")).toBeHidden();
+      await expect(page.locator(".workgrid")).not.toHaveClass(/mobile-detail-open/);
+    }
+    await expect(page.locator(".metric .number").nth(1)).toHaveText("5 processed");
+    await expect(page.locator(".metric .number").nth(2)).toHaveText("0 pending");
+    await page.selectOption("#reviewFilterSelect", "All");
+    await expect(page.locator(".message")).toHaveCount(6);
+    await pick(page, "Ada Okafor");
+    await expect(page.locator("#humanReviewStatus")).toHaveText("Approved");
+    await expect(page.locator("#draftEditor")).toHaveValue("Hi Ada, edited by a human.");
+    await page.locator("details", { hasText: "View preserved original AI output" }).locator("summary").click();
+    await expect(page.locator(".readback").last()).toContainText("Could you share some alternative times?");
+  });
+
+  test(`UX-04-01 @${width}: final rejection (Pending filter) also returns to the list`, async ({ page }) => {
+    await page.setViewportSize({ width, height });
+    await reveal(page);
+    await pick(page, "Ada Okafor");
+    for (let i = 0; i < 5; i++) await btn(page, "Reject draft").click();
+    await expect(page.getByText("0 approved, 5 rejected. 1 AI failure(s) still require attention.")).toBeVisible();
+    await expect(page.locator(".leftpane")).toBeVisible();
+    if (mobile) await expect(page.locator(".rightpane")).toBeHidden();
+    await page.selectOption("#reviewFilterSelect", "All");
+    await pick(page, "Sarah James");
+    await expect(page.locator(".readback").first()).toHaveText("Initial AI output asserted unsupported hiring decision");
+  });
+}

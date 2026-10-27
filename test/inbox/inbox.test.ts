@@ -3,7 +3,7 @@ import type { ValidMessage } from "@/lib/domain/types";
 import { SAMPLE_ROWS } from "@/lib/import/sample";
 import { applyImport, applyOutcomes, applyParseError, beginProcessing, initialImportState, markProcessing } from "@/lib/import/state";
 import {
-  clearFilters, filtered, grouped, initialInboxView, nextPending, resolveSelection, selectRecord, setAttentionOnly,
+  clearFilters, filtered, grouped, initialInboxView, nextPending, normalizeView, resolveSelection, selectRecord, setAttentionOnly,
   setProcessFilter, setReviewFilter, showFailedQueue, stats, viewAfterReveal,
 } from "@/lib/inbox/inbox";
 import { exactFixtureId, simulateBatch, simulateOutcome } from "@/lib/processing/mock";
@@ -124,5 +124,26 @@ describe("existing data after a failed new import", () => {
   it("a parse error keeps processed records and their outcomes", async () => {
     const d = await revealed();
     expect(applyParseError(d, "CSV has an unclosed quote.").records).toEqual(d.records);
+  });
+});
+
+describe("UX-04-01: no mobile dead end (central view invariant)", () => {
+  it("closes mobile detail when no visible record remains selected", async () => {
+    const d = await revealed();
+    const v = { ...selectRecord(initialInboxView, d.records[0]!.key), reviewFilter: "Approved" as const };
+    expect(normalizeView(d.records, v)).toMatchObject({ selectedKey: null, mobileDetail: false });
+  });
+  it("keeps mobile detail open when a visible record is (re)selected", async () => {
+    const d = await revealed();
+    const v = selectRecord(initialInboxView, d.records[1]!.key);
+    expect(normalizeView(d.records, v)).toEqual(v);
+    const hidden = selectRecord(initialInboxView, d.records.find((r) => r.processing === "failed")!.key);
+    expect(normalizeView(d.records, hidden)).toMatchObject({ selectedKey: d.records[0]!.key, mobileDetail: true });
+  });
+  it("never touches records", async () => {
+    const d = await revealed();
+    const before = JSON.stringify(d.records);
+    normalizeView(d.records, { ...initialInboxView, reviewFilter: "Rejected", mobileDetail: true });
+    expect(JSON.stringify(d.records)).toBe(before);
   });
 });

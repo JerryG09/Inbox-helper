@@ -11,11 +11,11 @@ import pixelmatch from "pixelmatch";
 const REF = path.resolve("reference/hifi-v1.1");
 const CANONICAL = "file://" + path.join(REF, "prototype/MUST-Inbox-Helper-HiFi-V1.1-APPROVED.html");
 const OUT = path.resolve("test/visual/artifacts");
-const REPORT = path.resolve("docs/evidence/ui-04/parity-report.json");
+const REPORT = path.resolve("docs/evidence/ui-04-r1/parity-report.json");
 mkdirSync(OUT, { recursive: true });
 
 type Step = (page: Page) => Promise<void>;
-type Case = { name: string; width: number; height: number; steps: Step; frozen?: string };
+type Case = { name: string; width: number; height: number; steps: Step; frozen?: string; exception?: { id: string; canonicalSteps: Step; unreachableInUnmodified?: boolean } };
 
 const FIXTURES = path.resolve("test/fixtures/csv");
 const click = (text: string): Step => (page) => page.getByRole("button", { name: text, exact: true }).click();
@@ -102,11 +102,23 @@ const FROZEN: Record<string, string> = {
   "inbox-select-blocked-1440": "screenshots/desktop/03-blocked-draft-1440.png",
   "inbox-select-blocked-390": "screenshots/mobile/04-blocked-detail-390.png",
 };
-// Unreachable below 900 px in the approved design: after the last Pending decision the mobile detail pane shows
-// "Select a message" without a way back to the list (reported to the owner as a design/correctness conflict).
-const DESKTOP_ONLY = new Set(["review-all-reviewed-show-all"]);
+// Owner-approved exception UX-04-01 (27 Oct 2026, "UI-04 R1", Option 2): when no visible record remains selected,
+// the mobile detail closes and the list returns. It only changes behavior at ≤900 px. For these cases the gate compares
+// the app with the UNCHANGED approved HTML after applying the same correction to the prototype's own state
+// (`state.mobileDetail=false; render()`), and separately records/asserts the difference from the unmodified HTML.
+const UX_04_01: Step = async (page) => { await page.evaluate("state.mobileDetail = false; render();"); };
+const FINAL_REJECTS = seq(REVEAL, pick("Ada Okafor"), click("Reject draft"), click("Reject draft"), click("Reject draft"), click("Reject draft"), click("Reject draft"));
+type Exception = { id: string; canonicalSteps: Step; unreachableInUnmodified?: boolean };
+const EXCEPTIONS: Record<string, Exception> = {
+  "review-all-reviewed": { id: "UX-04-01", canonicalSteps: seq(FINAL_REJECTS, UX_04_01) },
+  // Not reachable at all in the unmodified approved HTML (the dead end hides the filters), so no unmodified capture.
+  "review-all-reviewed-show-all": { id: "UX-04-01", canonicalSteps: seq(FINAL_REJECTS, UX_04_01, selectReview("All")), unreachableInUnmodified: true },
+};
 const CASES: Case[] = Object.entries(STATES).flatMap(([state, steps]) =>
-  WIDTHS.filter(([w]) => w === 1440 || !DESKTOP_ONLY.has(state)).map(([width, height]) => ({ name: `${state}-${width}`, width, height, steps, frozen: FROZEN[`${state}-${width}`] })),
+  WIDTHS.map(([width, height]) => ({
+    name: `${state}-${width}`, width, height, steps, frozen: FROZEN[`${state}-${width}`],
+    exception: width <= 900 ? EXCEPTIONS[state] : undefined,
+  })),
 );
 
 const results: Record<string, unknown> = {};
@@ -137,12 +149,22 @@ for (const c of CASES) {
   test(c.name, async ({ page }) => {
     await page.setViewportSize({ width: c.width, height: c.height });
     const app = await capture(page, "/", c.steps);
-    const canon = await capture(page, CANONICAL, c.steps);
+    const canon = await capture(page, CANONICAL, c.exception ? c.exception.canonicalSteps : c.steps);
     writeFileSync(path.join(OUT, `${c.name}.app.png`), PNG.sync.write(app.png));
     writeFileSync(path.join(OUT, `${c.name}.canonical-live.png`), PNG.sync.write(canon.png));
 
     const gate = diff(app.png, canon.png, path.join(OUT, `${c.name}.diff-vs-canonical-live.png`));
     const entry: Record<string, unknown> = { viewport: [c.width, c.height], horizontalOverflowPx: app.overflow, vsCanonicalLive: gate };
+    if (c.exception?.unreachableInUnmodified) {
+      entry.exception = { id: c.exception.id, gateComparedWith: "approved HTML + UX-04-01 state correction", vsUnmodifiedCanonical: "unreachable: unmodified design leaves the mobile detail open with no way back to the filters" };
+    } else if (c.exception) {
+      // Same user steps on the unmodified approved HTML: the owner-approved behavioral difference, recorded not hidden.
+      const unmodified = await capture(page, CANONICAL, c.steps);
+      writeFileSync(path.join(OUT, `${c.name}.canonical-unmodified.png`), PNG.sync.write(unmodified.png));
+      const vsUnmodified = diff(app.png, unmodified.png, path.join(OUT, `${c.name}.diff-vs-canonical-unmodified.png`));
+      entry.exception = { id: c.exception.id, gateComparedWith: "approved HTML + UX-04-01 state correction", vsUnmodifiedCanonical: vsUnmodified };
+      expect(vsUnmodified.sizeMatch === false || (vsUnmodified.diffPixels ?? 0) > 0, `${c.exception.id} must actually change the unmodified behavior`).toBe(true);
+    }
     if (c.frozen) {
       const frozen = PNG.sync.read(readFileSync(path.join(REF, c.frozen)));
       entry.vsFrozenPng = { file: c.frozen, ...diff(app.png, frozen, path.join(OUT, `${c.name}.diff-vs-frozen.png`)) };

@@ -67,6 +67,14 @@ export function resolveSelection(visible: readonly InboxRecord[], selectedKey: s
   return visible.some((r) => r.key === selectedKey) ? selectedKey : visible[0]?.key ?? null;
 }
 
+// Central view invariant. Selection follows the prototype's renderInbox(): a hidden selection moves to the first
+// visible record. UX-04-01 (owner-approved correction to V1.1, 27 Oct 2026): a mobile detail must not stay open
+// when no visible record is selected — return to the list instead of the prototype's dead-end empty card.
+export function normalizeView(records: readonly InboxRecord[], v: InboxView): InboxView {
+  const selectedKey = resolveSelection(filtered(records, v), v.selectedKey);
+  return { ...v, selectedKey, mobileDetail: v.mobileDetail && selectedKey !== null };
+}
+
 export function setProcessFilter(v: InboxView, processFilter: ProcessFilter): InboxView {
   return { ...v, processFilter, mobileDetail: false, reviewFilter: processFilter === "Failed" ? "All" : v.reviewFilter };
 }

@@ -14,7 +14,7 @@ import { INVALID_SAMPLE_NAME, INVALID_SAMPLE_ROWS, SAMPLE_NAME, SAMPLE_ROWS } fr
 import { applyImport, applyOutcomes, applyParseError, beginProcessing, cancelProcessing, initialImportState, markProcessing, type ImportState } from "@/lib/import/state";
 import { MAX_FILE_BYTES } from "@/lib/import/validate";
 import {
-  clearFilters, filtered, initialInboxView, intentLabel, nextPending, resolveSelection, selectRecord, setAttentionOnly, setProcessFilter,
+  clearFilters, initialInboxView, intentLabel, nextPending, normalizeView, selectRecord, setAttentionOnly, setProcessFilter,
   setReviewFilter, showFailedQueue, viewAfterReveal, type InboxView,
 } from "@/lib/inbox/inbox";
 import { simulateBatch } from "@/lib/processing/mock";
@@ -46,7 +46,7 @@ export default function Page() {
   // Any full re-render in the prototype drops the transient "draft edited" display, so every view change clears it.
   const setInboxView = (v: InboxView, rs: readonly InboxRecord[] = records) => {
     setEditedKey(null);
-    setInboxViewRaw({ ...v, selectedKey: resolveSelection(filtered(rs, v), v.selectedKey) });
+    setInboxViewRaw(normalizeView(rs, v));
   };
 
   // Record edits only touch the inbox; the Import form is not re-rendered (prototype renders the visible view only).
@@ -76,6 +76,7 @@ export default function Page() {
   // Keystroke path: like the prototype's draftChanged(), update state without moving the selection or the editor.
   const onDraft = (key: string, text: string) => {
     setRecords(updateRecord(records, key, (x) => editDraft(x, text)));
+    // Keep the selection fixed while typing (prototype draftChanged()); the edited record stays visible as Pending.
     setInboxViewRaw(reviewFilterAfterEdit(inboxView));
     setEditedKey(key);
   };
