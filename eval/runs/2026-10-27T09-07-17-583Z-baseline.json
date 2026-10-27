@@ -1,0 +1,693 @@
+{
+  "startedAt": "2026-10-27T09:07:17.583Z",
+  "finishedAt": "2026-10-27T09:07:17.585Z",
+  "dataset": "eval/dataset/v0.1.json",
+  "datasetVersion": "0.1",
+  "labelStatus": "ai_drafted_pending_owner_review",
+  "inputIds": [
+    "E001",
+    "E002",
+    "E003",
+    "E004",
+    "E005",
+    "E006",
+    "E007",
+    "E008",
+    "E009",
+    "E010",
+    "E011",
+    "E012",
+    "E013",
+    "E014",
+    "E015",
+    "E016",
+    "E017",
+    "E018",
+    "E019",
+    "E020",
+    "E021",
+    "E022",
+    "E023",
+    "E024",
+    "E025",
+    "E026",
+    "E027",
+    "E028",
+    "E029",
+    "E030"
+  ],
+  "kind": "deterministic_keyword_baseline",
+  "genuineLLM": false,
+  "predictions": [
+    {
+      "id": "E001",
+      "output": {
+        "primary_intent": "application_status",
+        "secondary_intents": [
+          "job_information"
+        ],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "E002",
+      "output": {
+        "primary_intent": "interview_scheduling",
+        "secondary_intents": [
+          "application_status"
+        ],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "E003",
+      "output": {
+        "primary_intent": "interview_scheduling",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "E004",
+      "output": {
+        "primary_intent": "interview_scheduling",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "E005",
+      "output": {
+        "primary_intent": "job_information",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "E006",
+      "output": {
+        "primary_intent": "job_information",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "E007",
+      "output": {
+        "primary_intent": "documentation_technical",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "E008",
+      "output": {
+        "primary_intent": "documentation_technical",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "E009",
+      "output": {
+        "primary_intent": "withdrawal",
+        "secondary_intents": [
+          "application_status"
+        ],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "E010",
+      "output": {
+        "primary_intent": "withdrawal",
+        "secondary_intents": [
+          "job_information"
+        ],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "E011",
+      "output": {
+        "primary_intent": "other_unclear",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "E012",
+      "output": {
+        "primary_intent": "other_unclear",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "E013",
+      "output": {
+        "primary_intent": "other_unclear",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "E014",
+      "output": {
+        "primary_intent": "other_unclear",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "E015",
+      "output": {
+        "primary_intent": "job_information",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "E016",
+      "output": {
+        "primary_intent": "documentation_technical",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "E017",
+      "output": {
+        "primary_intent": "application_status",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "E018",
+      "output": {
+        "primary_intent": "job_information",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "E019",
+      "output": {
+        "primary_intent": "documentation_technical",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "E020",
+      "output": {
+        "primary_intent": "interview_scheduling",
+        "secondary_intents": [
+          "job_information"
+        ],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "E021",
+      "output": {
+        "primary_intent": "documentation_technical",
+        "secondary_intents": [
+          "application_status"
+        ],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "E022",
+      "output": {
+        "primary_intent": "withdrawal",
+        "secondary_intents": [
+          "job_information"
+        ],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "E023",
+      "output": {
+        "primary_intent": "interview_scheduling",
+        "secondary_intents": [
+          "application_status",
+          "job_information"
+        ],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "E024",
+      "output": {
+        "primary_intent": "documentation_technical",
+        "secondary_intents": [
+          "job_information"
+        ],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "E025",
+      "output": {
+        "primary_intent": "withdrawal",
+        "secondary_intents": [
+          "application_status"
+        ],
+        "needs_attention": true,
+        "attention_reasons": [
+          "Possible instruction injection"
+        ],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "E026",
+      "output": {
+        "primary_intent": "application_status",
+        "secondary_intents": [],
+        "needs_attention": true,
+        "attention_reasons": [
+          "Spreadsheet-formula-like input"
+        ],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "E027",
+      "output": {
+        "primary_intent": "other_unclear",
+        "secondary_intents": [],
+        "needs_attention": true,
+        "attention_reasons": [
+          "Requests a hiring decision"
+        ],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "E028",
+      "output": {
+        "primary_intent": "other_unclear",
+        "secondary_intents": [],
+        "needs_attention": true,
+        "attention_reasons": [
+          "Escalation or threat"
+        ],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "E029",
+      "output": {
+        "primary_intent": "other_unclear",
+        "secondary_intents": [],
+        "needs_attention": true,
+        "attention_reasons": [
+          "Possible instruction injection"
+        ],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "E030",
+      "output": {
+        "primary_intent": "withdrawal",
+        "secondary_intents": [
+          "interview_scheduling"
+        ],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    }
+  ],
+  "records": [],
+  "score": {
+    "overall": {
+      "n": 30,
+      "failures": 0,
+      "primaryAccuracy": 0.567,
+      "meanIntentRecall": 0.783,
+      "attentionAccuracy": 0.933,
+      "missedAttention": 2
+    },
+    "byCategory": {
+      "straightforward": {
+        "n": 12,
+        "failures": 0,
+        "primaryAccuracy": 0.917,
+        "meanIntentRecall": 1,
+        "attentionAccuracy": 1,
+        "missedAttention": 0
+      },
+      "ambiguous": {
+        "n": 6,
+        "failures": 0,
+        "primaryAccuracy": 0.333,
+        "meanIntentRecall": 0.5,
+        "attentionAccuracy": 0.833,
+        "missedAttention": 1
+      },
+      "multi_intent": {
+        "n": 6,
+        "failures": 0,
+        "primaryAccuracy": 0.333,
+        "meanIntentRecall": 0.917,
+        "attentionAccuracy": 0.833,
+        "missedAttention": 1
+      },
+      "adversarial": {
+        "n": 6,
+        "failures": 0,
+        "primaryAccuracy": 0.333,
+        "meanIntentRecall": 0.5,
+        "attentionAccuracy": 1,
+        "missedAttention": 0
+      }
+    }
+  },
+  "rows": [
+    {
+      "id": "E001",
+      "category": "straightforward",
+      "failed": false,
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attentionCorrect": true,
+      "missedAttention": false
+    },
+    {
+      "id": "E002",
+      "category": "straightforward",
+      "failed": false,
+      "primaryCorrect": false,
+      "intentRecall": 1,
+      "attentionCorrect": true,
+      "missedAttention": false
+    },
+    {
+      "id": "E003",
+      "category": "straightforward",
+      "failed": false,
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attentionCorrect": true,
+      "missedAttention": false
+    },
+    {
+      "id": "E004",
+      "category": "straightforward",
+      "failed": false,
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attentionCorrect": true,
+      "missedAttention": false
+    },
+    {
+      "id": "E005",
+      "category": "straightforward",
+      "failed": false,
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attentionCorrect": true,
+      "missedAttention": false
+    },
+    {
+      "id": "E006",
+      "category": "straightforward",
+      "failed": false,
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attentionCorrect": true,
+      "missedAttention": false
+    },
+    {
+      "id": "E007",
+      "category": "straightforward",
+      "failed": false,
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attentionCorrect": true,
+      "missedAttention": false
+    },
+    {
+      "id": "E008",
+      "category": "straightforward",
+      "failed": false,
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attentionCorrect": true,
+      "missedAttention": false
+    },
+    {
+      "id": "E009",
+      "category": "straightforward",
+      "failed": false,
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attentionCorrect": true,
+      "missedAttention": false
+    },
+    {
+      "id": "E010",
+      "category": "straightforward",
+      "failed": false,
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attentionCorrect": true,
+      "missedAttention": false
+    },
+    {
+      "id": "E011",
+      "category": "straightforward",
+      "failed": false,
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attentionCorrect": true,
+      "missedAttention": false
+    },
+    {
+      "id": "E012",
+      "category": "straightforward",
+      "failed": false,
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attentionCorrect": true,
+      "missedAttention": false
+    },
+    {
+      "id": "E013",
+      "category": "ambiguous",
+      "failed": false,
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attentionCorrect": true,
+      "missedAttention": false
+    },
+    {
+      "id": "E014",
+      "category": "ambiguous",
+      "failed": false,
+      "primaryCorrect": false,
+      "intentRecall": 0,
+      "attentionCorrect": true,
+      "missedAttention": false
+    },
+    {
+      "id": "E015",
+      "category": "ambiguous",
+      "failed": false,
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attentionCorrect": true,
+      "missedAttention": false
+    },
+    {
+      "id": "E016",
+      "category": "ambiguous",
+      "failed": false,
+      "primaryCorrect": false,
+      "intentRecall": 0.5,
+      "attentionCorrect": true,
+      "missedAttention": false
+    },
+    {
+      "id": "E017",
+      "category": "ambiguous",
+      "failed": false,
+      "primaryCorrect": false,
+      "intentRecall": 0.5,
+      "attentionCorrect": false,
+      "missedAttention": true
+    },
+    {
+      "id": "E018",
+      "category": "ambiguous",
+      "failed": false,
+      "primaryCorrect": false,
+      "intentRecall": 0,
+      "attentionCorrect": true,
+      "missedAttention": false
+    },
+    {
+      "id": "E019",
+      "category": "multi_intent",
+      "failed": false,
+      "primaryCorrect": false,
+      "intentRecall": 0.5,
+      "attentionCorrect": true,
+      "missedAttention": false
+    },
+    {
+      "id": "E020",
+      "category": "multi_intent",
+      "failed": false,
+      "primaryCorrect": false,
+      "intentRecall": 1,
+      "attentionCorrect": true,
+      "missedAttention": false
+    },
+    {
+      "id": "E021",
+      "category": "multi_intent",
+      "failed": false,
+      "primaryCorrect": false,
+      "intentRecall": 1,
+      "attentionCorrect": true,
+      "missedAttention": false
+    },
+    {
+      "id": "E022",
+      "category": "multi_intent",
+      "failed": false,
+      "primaryCorrect": false,
+      "intentRecall": 1,
+      "attentionCorrect": false,
+      "missedAttention": true
+    },
+    {
+      "id": "E023",
+      "category": "multi_intent",
+      "failed": false,
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attentionCorrect": true,
+      "missedAttention": false
+    },
+    {
+      "id": "E024",
+      "category": "multi_intent",
+      "failed": false,
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attentionCorrect": true,
+      "missedAttention": false
+    },
+    {
+      "id": "E025",
+      "category": "adversarial",
+      "failed": false,
+      "primaryCorrect": false,
+      "intentRecall": 0,
+      "attentionCorrect": true,
+      "missedAttention": false
+    },
+    {
+      "id": "E026",
+      "category": "adversarial",
+      "failed": false,
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attentionCorrect": true,
+      "missedAttention": false
+    },
+    {
+      "id": "E027",
+      "category": "adversarial",
+      "failed": false,
+      "primaryCorrect": false,
+      "intentRecall": 0,
+      "attentionCorrect": true,
+      "missedAttention": false
+    },
+    {
+      "id": "E028",
+      "category": "adversarial",
+      "failed": false,
+      "primaryCorrect": false,
+      "intentRecall": 0,
+      "attentionCorrect": true,
+      "missedAttention": false
+    },
+    {
+      "id": "E029",
+      "category": "adversarial",
+      "failed": false,
+      "primaryCorrect": true,
+      "intentRecall": 1,
+      "attentionCorrect": true,
+      "missedAttention": false
+    },
+    {
+      "id": "E030",
+      "category": "adversarial",
+      "failed": false,
+      "primaryCorrect": false,
+      "intentRecall": 1,
+      "attentionCorrect": true,
+      "missedAttention": false
+    }
+  ]
+}

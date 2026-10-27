@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [react()],
   resolve: { alias: { "@": path.resolve(__dirname, "src") } },
   test: {
-    include: ["test/ui/**/*.test.tsx", "test/reference/**/*.test.ts"],
+    include: ["test/ui/**/*.test.tsx", "test/reference/**/*.test.ts", "test/domain/**/*.test.ts"],
     environment: "jsdom",
   },
 });
