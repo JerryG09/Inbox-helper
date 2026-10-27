@@ -1,0 +1,14 @@
+node_modules/
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+.DS_Store
+.env
+.env*.local
+/test-results/
+/playwright-report/
+/test/visual/artifacts/
+# Owner's inbound handoff package; its verified contents are committed under reference/ and docs/
+/MUST-Inbox-Helper-AI-Native-Handoff-V1.1.1.zip
+/MUST-Inbox-Helper-UI-Implementation-Contract-V1.1.1-AI-NATIVE.md

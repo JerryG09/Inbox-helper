@@ -1,0 +1,190 @@
+{
+  "import-empty-1440": {
+    "viewport": [
+      1440,
+      900
+    ],
+    "horizontalOverflowPx": 0,
+    "vsCanonicalLive": {
+      "sizeMatch": true,
+      "a": [
+        1440,
+        900
+      ],
+      "b": [
+        1440,
+        900
+      ],
+      "diffPixels": 0,
+      "percent": 0
+    },
+    "vsFrozenPng": {
+      "file": "screenshots/desktop/01-import-empty-1440.png",
+      "sizeMatch": true,
+      "a": [
+        1440,
+        900
+      ],
+      "b": [
+        1440,
+        900
+      ],
+      "diffPixels": 32595,
+      "percent": 2.515
+    }
+  },
+  "import-empty-390": {
+    "viewport": [
+      390,
+      844
+    ],
+    "horizontalOverflowPx": 0,
+    "vsCanonicalLive": {
+      "sizeMatch": true,
+      "a": [
+        390,
+        1660
+      ],
+      "b": [
+        390,
+        1660
+      ],
+      "diffPixels": 0,
+      "percent": 0
+    },
+    "vsFrozenPng": {
+      "file": "screenshots/mobile/01-import-empty-390.png",
+      "sizeMatch": true,
+      "a": [
+        390,
+        1660
+      ],
+      "b": [
+        390,
+        1660
+      ],
+      "diffPixels": 26835,
+      "percent": 4.145
+    }
+  },
+  "import-empty-320": {
+    "viewport": [
+      320,
+      700
+    ],
+    "horizontalOverflowPx": 0,
+    "vsCanonicalLive": {
+      "sizeMatch": true,
+      "a": [
+        320,
+        1827
+      ],
+      "b": [
+        320,
+        1827
+      ],
+      "diffPixels": 0,
+      "percent": 0
+    }
+  },
+  "import-empty-768": {
+    "viewport": [
+      768,
+      1024
+    ],
+    "horizontalOverflowPx": 0,
+    "vsCanonicalLive": {
+      "sizeMatch": true,
+      "a": [
+        768,
+        1089
+      ],
+      "b": [
+        768,
+        1089
+      ],
+      "diffPixels": 0,
+      "percent": 0
+    }
+  },
+  "inbox-empty-1440": {
+    "viewport": [
+      1440,
+      900
+    ],
+    "horizontalOverflowPx": 0,
+    "vsCanonicalLive": {
+      "sizeMatch": true,
+      "a": [
+        1440,
+        900
+      ],
+      "b": [
+        1440,
+        900
+      ],
+      "diffPixels": 0,
+      "percent": 0
+    }
+  },
+  "inbox-empty-390": {
+    "viewport": [
+      390,
+      844
+    ],
+    "horizontalOverflowPx": 0,
+    "vsCanonicalLive": {
+      "sizeMatch": true,
+      "a": [
+        390,
+        949
+      ],
+      "b": [
+        390,
+        949
+      ],
+      "diffPixels": 0,
+      "percent": 0
+    }
+  },
+  "results-empty-1440": {
+    "viewport": [
+      1440,
+      900
+    ],
+    "horizontalOverflowPx": 0,
+    "vsCanonicalLive": {
+      "sizeMatch": true,
+      "a": [
+        1440,
+        900
+      ],
+      "b": [
+        1440,
+        900
+      ],
+      "diffPixels": 0,
+      "percent": 0
+    }
+  },
+  "results-empty-390": {
+    "viewport": [
+      390,
+      844
+    ],
+    "horizontalOverflowPx": 0,
+    "vsCanonicalLive": {
+      "sizeMatch": true,
+      "a": [
+        390,
+        949
+      ],
+      "b": [
+        390,
+        949
+      ],
+      "diffPixels": 0,
+      "percent": 0
+    }
+  }
+}
