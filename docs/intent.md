@@ -49,3 +49,12 @@ Source: `reference/hifi-v1.1/docs/HiFi-V1.1-Handoff-Signoff.md`, `reference/hifi
 ## Owner to confirm
 - Exact Oct 26 preparation activities beyond what the cited files record (e.g. time spent, tools used).
 - The dataset labels in `eval/dataset/v0.1.json` (drafted by Claude, see `label_status`).
+
+## Owner sign-off — 27 October 2026
+
+*Appended; the chronology and "Owner to confirm" list above are kept as written at the time.*
+
+- The owner reviewed and **approved this document** — project intent and documented chronology — on 27 October 2026.
+- The owner **accepted all six v0.2 label adjudications** (E014, E016, E017, E019, E020, E028); see `docs/evaluation/label-adjudication-v0.2.md`. `eval/dataset/v0.2.json` is now `owner_confirmed`.
+- Historical clarification: `eval/dataset/v0.1.json` was never owner-confirmed and stays unchanged as the AI-drafted baseline. The v0.2 adjudication was made after inspecting model results, so scores against v0.2 are post-hoc and do not satisfy success criterion 4 as independent held-out validation; a fresh held-out set is needed for that.
+- Provenance: approval given to Claude Code in session; recorded on branch `day1/owner-signoffs-2026-10-27`.

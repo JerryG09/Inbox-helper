@@ -106,7 +106,7 @@ describe("historical evaluation files", () => {
   it("v0.2 changes only the six adjudicated items relative to v0.1", () => {
     const load = (v: string) => JSON.parse(readFileSync(`eval/dataset/${v}.json`, "utf8")) as { label_status: string; items: (EvalItem & { revision?: string })[] };
     const a = load("v0.1"), b = load("v0.2");
-    expect(b.label_status).not.toBe("owner_confirmed");
+    expect(b.label_status).toBe("owner_confirmed");
     const changed = b.items.filter((x, i) => JSON.stringify(x) !== JSON.stringify(a.items[i])).map((x) => x.id);
     expect(changed).toEqual(["E014", "E016", "E017", "E019", "E020", "E028"]);
     expect(b.items.map((x) => x.message)).toEqual(a.items.map((x) => x.message));

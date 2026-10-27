@@ -27,3 +27,13 @@
 ## Owner decision required
 
 Accept, amend or reject each row. Then set `label_status` to `owner_confirmed`, or record the amendments. Until then, no score against v0.1 or v0.2 may be reported as measured against human labels.
+
+## Owner sign-off — 27 October 2026
+
+*Appended after the proposal above; the original status text is kept as the historical record.*
+
+- **Decision:** the owner reviewed and **accepted all six proposed adjudications without amendment**: E014, E016, E017, E019, E020 and E028.
+- **Effect:** `eval/dataset/v0.2.json` `label_status` changed from `proposed_v0.2_pending_owner_review` to `owner_confirmed`, with a `label_provenance` block. No message, expected primary, secondary, acceptable primary or attention label was changed.
+- **v0.1:** `eval/dataset/v0.1.json` is unchanged and remains the historical AI-drafted baseline (`ai_drafted_pending_owner_review`).
+- **Post-hoc caveat:** this adjudication was performed **after inspecting model results**. Historical scores against v0.2 are post-hoc label-corrected scores, **not independent held-out validation**. Existing run and score outputs keep the `labelStatus` recorded at the time they were produced.
+- **Provenance:** owner approval given to Claude Code in session on 27 October 2026; recorded on branch `day1/owner-signoffs-2026-10-27`.

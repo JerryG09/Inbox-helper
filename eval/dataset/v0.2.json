@@ -3,8 +3,15 @@
   "version": "0.2",
   "created": "2026-10-27",
   "synthetic": true,
-  "notes": "Synthetic. PROPOSED label revision of v0.1 drafted by Claude Code from the DAY1-02 R1 adjudication (docs/evaluation/label-adjudication-v0.2.md). NOT owner-confirmed. v0.1 is preserved unchanged as the historical initial-label version. acceptable_primary lists alternative primaries a reviewer accepts as equally correct.",
-  "label_status": "proposed_v0.2_pending_owner_review",
+  "notes": "Synthetic. PROPOSED label revision of v0.1 drafted by Claude Code from the DAY1-02 R1 adjudication (docs/evaluation/label-adjudication-v0.2.md). Owner-confirmed 2026-10-27 (see label_provenance); adjudication was post-hoc. v0.1 is preserved unchanged as the historical initial-label version. acceptable_primary lists alternative primaries a reviewer accepts as equally correct.",
+  "label_status": "owner_confirmed",
+  "label_provenance": {
+    "drafted_by": "Claude Code (DAY1-02 R1 adjudication, docs/evaluation/label-adjudication-v0.2.md)",
+    "previous_label_status": "proposed_v0.2_pending_owner_review",
+    "owner_confirmed_date": "2026-10-27",
+    "owner_decision": "All six proposed adjudications (E014, E016, E017, E019, E020, E028) accepted without amendment.",
+    "adjudication_timing": "post_hoc: adjudication was performed after inspecting model results (run 2026-10-27T09-27-47-053Z-llm.json). Scores against v0.2 are post-hoc and are not independent held-out validation."
+  },
   "derived_from": "0.1",
   "items": [
     { "id": "E001", "category": "straightforward", "candidate_name": "Tomi Adeyemi", "subject": "Application follow-up", "message": "Hi, I applied for the Data Analyst role two weeks ago. Could you tell me where my application stands?", "expected_primary": "application_status", "expected_secondary": [], "expected_attention": false },
