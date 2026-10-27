@@ -36,4 +36,4 @@ Accept, amend or reject each row. Then set `label_status` to `owner_confirmed`, 
 - **Effect:** `eval/dataset/v0.2.json` `label_status` changed from `proposed_v0.2_pending_owner_review` to `owner_confirmed`, with a `label_provenance` block. No message, expected primary, secondary, acceptable primary or attention label was changed.
 - **v0.1:** `eval/dataset/v0.1.json` is unchanged and remains the historical AI-drafted baseline (`ai_drafted_pending_owner_review`).
 - **Post-hoc caveat:** this adjudication was performed **after inspecting model results**. Historical scores against v0.2 are post-hoc label-corrected scores, **not independent held-out validation**. Existing run and score outputs keep the `labelStatus` recorded at the time they were produced.
-- **Provenance:** owner approval given to Claude Code in session on 27 October 2026; recorded on branch `day1/owner-signoffs-2026-10-27`.
+- **Provenance:** Owner approval was explicitly given in the ChatGPT project conversation on 27 October 2026 and communicated to Claude Code through the authorized implementation instruction. No separate signed approval document was supplied.
