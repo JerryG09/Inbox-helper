@@ -1,19 +1,27 @@
+import { blockerResolved, hadBlocker } from "@/lib/domain/transitions";
 import type { InboxRecord } from "@/lib/domain/types";
-import { BLOCKED_FINDING, UNSUPPORTED_HIRING_FLAG } from "@/lib/processing/processor";
+import { UNSUPPORTED_HIRING_FLAG } from "@/lib/processing/processor";
 
-// "Attention & safety" block from details() in the approved V1.1 HTML. Display only in UI-03;
-// blocker correction and recheck transitions are UI-04.
-export function AttentionPanel({ r }: { r: InboxRecord }) {
+// "Attention & safety" block from details()/draftChanged() in the approved V1.1 HTML.
+// `editedSinceRender` mirrors the prototype's in-place update after a draft keystroke on a blocker record.
+export function AttentionPanel({ r, editedSinceRender }: { r: InboxRecord; editedSinceRender: boolean }) {
   const blocked = r.attention === "blocked";
   const reasons = r.currentAttentionReasons.filter((x) => x !== UNSUPPORTED_HIRING_FLAG);
-  const hadBlocker = r.historicalAiFindings.includes(BLOCKED_FINDING);
+  const blocker = hadBlocker(r);
   return (
     <div className="detailblock">
       <div className="detailheading"><span className="heading-icon">!</span> Attention & safety</div>
       <div id="attentionPanel">
-        {blocked ? (
+        {blocker && editedSinceRender ? (
+          <div className="notice block"><b>BLOCKED · Original AI claim needs rechecking</b><p>Draft edited. Run the limited mock phrase check, then inspect the reply. The checker cannot certify safety.</p></div>
+        ) : blocked ? (
           <>
             <div className="notice block"><b>BLOCKED · Unsupported hiring outcome</b><p>The original simulated AI reply asserted a hiring decision without evidence. Edit the draft, then run the limited mock phrase check. Human review is still required.</p></div>
+            {reasons.map((x) => <div className="notice warn mt" key={x}>{x}</div>)}
+          </>
+        ) : blockerResolved(r) ? (
+          <>
+            <div className="notice ok"><b>Initial AI claim corrected in the current draft.</b><p>The historical unsafe output is preserved. The limited mock phrase check does not certify this reply as safe; review it before approval.</p></div>
             {reasons.map((x) => <div className="notice warn mt" key={x}>{x}</div>)}
           </>
         ) : reasons.length ? (
@@ -22,7 +30,7 @@ export function AttentionPanel({ r }: { r: InboxRecord }) {
           <div className="notice">No current attention reasons recorded. Human review still required.</div>
         )}
       </div>
-      {hadBlocker && (
+      {blocker && (
         <>
           <div className="spacer"></div>
           <details><summary className="small">Historical AI finding</summary><div className="readback">{r.historicalAiFindings.join(" | ")}</div></details>

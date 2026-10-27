@@ -1,3 +1,4 @@
+import { blockerResolved } from "@/lib/domain/transitions";
 import type { InboxRecord } from "@/lib/domain/types";
 import { grouped, initials, REVIEW_LABEL, type InboxView, type ProcessFilter, type ReviewFilter } from "@/lib/inbox/inbox";
 
@@ -69,6 +70,7 @@ function QueueBody(p: Props) {
               <span className="tags">
                 {r.processing === "completed" && r.attention === "blocked" && <span className="badge block">✕ Blocked</span>}
                 {r.processing === "completed" && r.attention === "warning" && <span className="badge warn">⚠ Needs attention</span>}
+                {r.processing === "completed" && r.attention === "none" && blockerResolved(r) && <span className="badge ok">Initial issue corrected</span>}
                 {r.processing === "failed" && <span className="badge block">Retry available</span>}
               </span>
             </span>

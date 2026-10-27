@@ -1,12 +1,13 @@
 import type { InboxRecord } from "@/lib/domain/types";
 import { filtered, resolveSelection, stats, type InboxView, type ProcessFilter, type ReviewFilter } from "@/lib/inbox/inbox";
 import type { View } from "@/lib/domain/views";
-import { CandidateReview } from "./CandidateReview";
+import { CandidateReview, type ReviewHandlers } from "./CandidateReview";
 import { MessageQueue } from "./MessageQueue";
 
-type Props = {
+type Props = ReviewHandlers & {
   records: InboxRecord[];
   view: InboxView;
+  editedKey: string | null;
   onNavigate: (view: View) => void;
   onSelect: (key: string) => void;
   onProcessFilter: (v: ProcessFilter) => void;
@@ -58,8 +59,12 @@ export function InboxWorkspace(p: Props) {
           onAttentionOnly={p.onAttentionOnly} onClearFilters={p.onClearFilters} onViewResults={() => p.onNavigate("results")}
         />
         <section className="rightpane">
-          <CandidateReview r={record} onBackToList={p.onBackToList} onNextPending={p.onNextPending} />
-          <div id="draft-change-indicator" className="muted tiny" aria-live="polite"></div>
+          <CandidateReview
+            r={record} editedSinceRender={record !== null && p.editedKey === record.key}
+            onBackToList={p.onBackToList} onNextPending={p.onNextPending}
+            onPrimary={p.onPrimary} onSecondary={p.onSecondary} onDraft={p.onDraft} onRecheck={p.onRecheck} onApprove={p.onApprove} onReject={p.onReject}
+          />
+          <div id="draft-change-indicator" className="muted tiny" aria-live="polite">{record !== null && p.editedKey === record.key ? "Draft changed. Review pending." : ""}</div>
         </section>
       </div>
     </>

@@ -11,7 +11,7 @@ import pixelmatch from "pixelmatch";
 const REF = path.resolve("reference/hifi-v1.1");
 const CANONICAL = "file://" + path.join(REF, "prototype/MUST-Inbox-Helper-HiFi-V1.1-APPROVED.html");
 const OUT = path.resolve("test/visual/artifacts");
-const REPORT = path.resolve("docs/evidence/ui-03/parity-report.json");
+const REPORT = path.resolve("docs/evidence/ui-04/parity-report.json");
 mkdirSync(OUT, { recursive: true });
 
 type Step = (page: Page) => Promise<void>;
@@ -22,10 +22,15 @@ const click = (text: string): Step => (page) => page.getByRole("button", { name:
 const upload = (file: string): Step => (page) => page.setInputFiles("#csvFile", path.join(FIXTURES, file));
 const seq = (...steps: Step[]): Step => async (page) => { for (const s of steps) await s(page); };
 
+
 const clickIfVisible = (text: string): Step => async (page) => {
   const b = page.getByRole("button", { name: text, exact: true });
   if (await b.isVisible()) await b.click(); // "← All messages" is hidden above 900 px by the approved CSS
 };
+const SAFE = "Hi Sarah, thanks for your message. We will ask the recruitment team for an update on your application.";
+const fill = (text: string): Step => (page) => page.fill("#draftEditor", text);
+// On ≤900 px the filters live in the list pane, hidden while a detail is open; return to the list first.
+const selectReview = (v: string): Step => async (page) => { await clickIfVisible("← All messages")(page); await page.selectOption("#reviewFilterSelect", v); };
 const pick = (name: string): Step => (page) => page.locator(".message", { hasText: name }).click();
 const REVEAL: Step = seq(click("Load 6-message sample"), click("Process 6 valid messages →"), click("Reveal simulated AI results →"));
 
@@ -67,6 +72,21 @@ const STATES: Record<string, Step> = {
     async (page) => { await page.fill("#manual-id", "M001"); await page.fill("#manual-name", "Ada Okafor"); await page.fill("#manual-subject", "Interview change"); await page.fill("#manual-message", "Please withdraw my application."); },
     click("Validate manual message"), click("Process 1 valid messages →"), click("Reveal simulated AI results →"),
   ),
+  "review-approve-first": seq(REVEAL, pick("Ada Okafor"), click("Approve draft")),
+  "review-reject-first": seq(REVEAL, pick("Ada Okafor"), click("Reject draft")),
+  "review-next-pending-after-approve": seq(REVEAL, pick("Ada Okafor"), click("Approve draft"), click("Next pending →")),
+  "review-approved-filter-then-edit": seq(REVEAL, pick("Ada Okafor"), click("Approve draft"), selectReview("Approved"), pick("Ada Okafor"), fill("Hi Ada, could you share two alternative times?")),
+  "review-primary-swap": seq(REVEAL, pick("David Chen"), async (page) => { await page.selectOption("#primaryIntent", "Documentation / technical"); }),
+  "review-primary-correct": seq(REVEAL, pick("Grace Bello"), async (page) => { await page.selectOption("#primaryIntent", "Job information"); }),
+  "review-secondary-add": seq(REVEAL, pick("Ada Okafor"), async (page) => { await page.check('.secondary-options input[value="Job information"]'); }),
+  "review-empty-draft": seq(REVEAL, pick("Ada Okafor"), fill("")),
+  "review-blocked-recheck-unchanged": seq(REVEAL, pick("Sarah James"), click("Run limited mock check")),
+  "review-blocked-edited": seq(REVEAL, pick("Sarah James"), fill(SAFE)),
+  "review-blocked-rechecked": seq(REVEAL, pick("Sarah James"), fill(SAFE), click("Run limited mock check")),
+  "review-blocked-approved": seq(REVEAL, pick("Sarah James"), fill(SAFE), click("Run limited mock check"), click("Approve draft"), selectReview("All")),
+  "review-blocked-reintroduced": seq(REVEAL, pick("Sarah James"), fill(SAFE), click("Run limited mock check"), fill(SAFE + " You are hired.")),
+  "review-all-reviewed": seq(REVEAL, pick("Ada Okafor"), click("Reject draft"), click("Reject draft"), click("Reject draft"), click("Reject draft"), click("Reject draft")),
+  "review-all-reviewed-show-all": seq(REVEAL, pick("Ada Okafor"), click("Reject draft"), click("Reject draft"), click("Reject draft"), click("Reject draft"), click("Reject draft"), selectReview("All")),
   "inbox-after-failed-import": seq(REVEAL, (page) => page.click("#nav-import"), upload("malformed.csv"), (page) => page.click("#nav-inbox")),
   "results-empty": (page) => page.click("#nav-results"),
 };
@@ -82,8 +102,11 @@ const FROZEN: Record<string, string> = {
   "inbox-select-blocked-1440": "screenshots/desktop/03-blocked-draft-1440.png",
   "inbox-select-blocked-390": "screenshots/mobile/04-blocked-detail-390.png",
 };
+// Unreachable below 900 px in the approved design: after the last Pending decision the mobile detail pane shows
+// "Select a message" without a way back to the list (reported to the owner as a design/correctness conflict).
+const DESKTOP_ONLY = new Set(["review-all-reviewed-show-all"]);
 const CASES: Case[] = Object.entries(STATES).flatMap(([state, steps]) =>
-  WIDTHS.map(([width, height]) => ({ name: `${state}-${width}`, width, height, steps, frozen: FROZEN[`${state}-${width}`] })),
+  WIDTHS.filter(([w]) => w === 1440 || !DESKTOP_ONLY.has(state)).map(([width, height]) => ({ name: `${state}-${width}`, width, height, steps, frozen: FROZEN[`${state}-${width}`] })),
 );
 
 const results: Record<string, unknown> = {};
