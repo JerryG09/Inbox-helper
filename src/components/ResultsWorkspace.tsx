@@ -3,16 +3,18 @@ import type { View } from "@/lib/domain/views";
 import { intentLabel, PROCESSING_LABEL, REVIEW_LABEL, stats } from "@/lib/inbox/inbox";
 import { attentionBadgeClass, attentionState, historyLabel } from "@/lib/results/results";
 import { Metrics } from "./InboxWorkspace";
+import { useLiveCopy } from "./RuntimeMode";
 
 type Props = { records: readonly InboxRecord[]; onNavigate: (view: View) => void; onDownload: () => void };
 
 // Results screen from renderResults() in the approved V1.1 HTML. Derived from the current records on every render.
 export function ResultsWorkspace({ records, onNavigate, onDownload }: Props) {
+  const liveCopy = useLiveCopy();
   if (!records.length) {
     return (
       <div className="blank">
         <b>No batch results yet</b>
-        <div className="muted small">Import messages and run the local processing simulation first.</div>
+        <div className="muted small">{liveCopy ? "Import messages and process them first." : "Import messages and run the local processing simulation first."}</div>
         <button className="btn primary" onClick={() => onNavigate("import")}>Start with Import →</button>
       </div>
     );
@@ -68,7 +70,7 @@ export function ResultsWorkspace({ records, onNavigate, onDownload }: Props) {
           </table>
         </div>
         <div className="spacer"></div>
-        <div className="notice warn">Export includes unapproved, rejected and failed records and distinguishes current attention from historical AI findings. Spreadsheet-dangerous input cells are prefixed with an apostrophe in CSV only. This is mock data; export does not approve or send a message.</div>
+        <div className="notice warn">{`Export includes unapproved, rejected and failed records and distinguishes current attention from historical AI findings. Spreadsheet-dangerous input cells are prefixed with an apostrophe in CSV only. ${liveCopy ? "AI drafts are Anthropic-generated suggestions, not official messages;" : "This is mock data;"} export does not approve or send a message.`}</div>
       </div>
     </>
   );

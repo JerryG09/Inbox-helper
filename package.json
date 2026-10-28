@@ -2,7 +2,7 @@
   "name": "inbox-helper",
   "version": "0.1.0",
   "private": true,
-  "description": "MUST Option A \u2014 Candidate Inbox Helper (Hi-fi V1.1 implementation). Synthetic data and simulated AI only.",
+  "description": "MUST Option A — Candidate Inbox Helper (Hi-fi V1.1 implementation). Deterministic simulation by default; optional local-only Anthropic processing (AI-01). Synthetic data only.",
   "scripts": {
     "dev": "next dev -p 3000",
     "build": "next build",
@@ -17,9 +17,11 @@
     "eval:rescore": "tsx eval/rescore.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "1.3.0",
     "next": "16.4.3",
     "react": "19.3.1",
     "react-dom": "19.3.1",
+    "server-only": "0.0.1",
     "zod": "4.6.7"
   },
   "devDependencies": {

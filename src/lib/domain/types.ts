@@ -1,4 +1,5 @@
 import type { IntentId } from "./intents";
+import type { ProviderMeta } from "../processing/live-contract";
 
 // Canonical state model (contract §5).
 export type ProcessingStatus = "queued" | "processing" | "completed" | "failed";
@@ -58,6 +59,8 @@ export type InboxRecord = {
   needsRecheck: boolean;
   // Who produced the classification/draft. Simulated sources are never a real model response.
   outcomeSource?: OutcomeSource;
+  // Genuine-provider call metadata (model, ids, tokens, latency). Kept apart from candidate-facing content.
+  providerMeta?: ProviderMeta;
 };
 
 export type OutcomeSource = "simulated_fixture" | "simulated_fallback" | "anthropic";

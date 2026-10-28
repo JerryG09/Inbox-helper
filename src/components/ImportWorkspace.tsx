@@ -1,5 +1,7 @@
 import { useRef } from "react";
 import type { ImportState } from "@/lib/import/state";
+import { MAX_LIVE_MESSAGES } from "@/lib/processing/live-contract";
+import { useRuntimeMode } from "./RuntimeMode";
 
 type Props = {
   state: ImportState;
@@ -23,7 +25,9 @@ export function ImportWorkspace(p: Props) {
   const nameRef = useRef<HTMLInputElement>(null);
   const subjectRef = useRef<HTMLInputElement>(null);
   const messageRef = useRef<HTMLTextAreaElement>(null);
+  const mode = useRuntimeMode();
 
+  if (state.processing && mode.kind !== "simulated") return <LiveProcessing state={state} model={mode.kind === "anthropic" ? mode.model : null} onStart={p.onRevealResults} onCancel={p.onCancelProcessing} />;
   if (state.processing) {
     return (
       <div className="panel">
@@ -62,7 +66,7 @@ export function ImportWorkspace(p: Props) {
           <p className="sub small">Required: <code>id</code>, <code>message</code>. Optional: <code>candidate_name</code>, <code>subject</code>.</p>
           <div className="blank mt">
             <b>Upload CSV</b>
-            <div className="muted small">CSV is parsed locally for preview. In a future AI-enabled app, messages would be sent to a configured model provider for processing.</div>
+            <div className="muted small">{mode.kind === "simulated" ? "CSV is parsed locally for preview. In a future AI-enabled app, messages would be sent to a configured model provider for processing." : "CSV is parsed locally for preview. Valid messages are sent to Anthropic only when you start processing. Use synthetic data only."}</div>
             <label className="btn" htmlFor="csvFile">Choose local CSV</label>
             <input
               className="sr-only" id="csvFile" type="file" accept=".csv,text/csv"
@@ -94,6 +98,38 @@ export function ImportWorkspace(p: Props) {
         <div className="notice mt">Empty state: no messages loaded. Select a CSV, load synthetic sample messages, or enter a manual message.</div>
       )}
     </>
+  );
+}
+
+// UX-AI-01: live variant of the processing state, reusing the V1.1 panel/outline/statsline markup. Nothing is sent
+// until the recruiter starts processing; while the request is in flight the panel reports it via role="status".
+function LiveProcessing({ state, model, onStart, onCancel }: { state: ImportState; model: string | null; onStart: () => void; onCancel: () => void }) {
+  const total = state.records.length;
+  const inFlight = state.records.filter((r) => r.processing === "processing").length;
+  const overLimit = total > MAX_LIVE_MESSAGES;
+  const status = !model
+    ? "Live AI processing is unavailable on this server. No model calls can be made and no simulated results will be shown."
+    : inFlight
+      ? `Processing ${inFlight} message${inFlight === 1 ? "" : "s"} with Anthropic (${model}). This can take several seconds per message.`
+      : `${total} queued. Nothing has been sent yet. Starting processing sends these messages to Anthropic (${model}) to classify them and draft suggested replies.`;
+  return (
+    <div className="panel">
+      <div className="section-label">{model ? "Processing state · Anthropic" : "Processing state · live AI unavailable"}</div>
+      <h2>Batch prepared for processing</h2>
+      <p className="sub" role="status" id="liveProcessingStatus">{status}</p>
+      {overLimit && <div className="notice warn mt">{`Live processing is limited to ${MAX_LIVE_MESSAGES} messages per request. Import ${MAX_LIVE_MESSAGES} or fewer messages to process them.`}</div>}
+      <div className="spacer"></div>
+      <div className="outline">
+        <div className="row"><b>{inFlight ? "Processing" : "Queued"}</b><span className="badge">{`${total} messages`}</span></div>
+        <div className="spacer"></div>
+        <div className="statsline"><span style={{ width: "0%", background: "#777" }}></span></div>
+      </div>
+      <div className="spacer"></div>
+      <div className="actions">
+        <button className="btn primary" onClick={onStart} disabled={inFlight > 0 || overLimit}>{inFlight ? "Processing…" : "Start AI processing →"}</button>
+        <button className="btn" onClick={onCancel}>Cancel</button>
+      </div>
+    </div>
   );
 }
 

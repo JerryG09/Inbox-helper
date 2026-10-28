@@ -53,6 +53,12 @@ export function InboxWorkspace(p: Props) {
           <button className="btn small primary" onClick={() => p.onNavigate("results")}>View results ↗</button>
         </div>
       </div>
+      {/* UX-AI-02 (AI-01 carry-forward A): a record being (re)processed may be hidden by the current filter, e.g. a
+          retried record leaves the Failed queue. This existing-style notice keeps progress visible and announced in
+          every layout (it is not inside the toolbar that the mobile detail view hides) and disappears on settlement. */}
+      {s.processing > 0 && (
+        <div className="notice mb" role="status" id="processingIndicator">{`Processing ${s.processing} message${s.processing === 1 ? "" : "s"}… Results appear in the queue when processing finishes. Other messages remain available for review.`}</div>
+      )}
       <div className={`workgrid ${view.mobileDetail ? "mobile-detail-open" : ""}`}>
         <MessageQueue
           visible={visible} total={s.total} view={view} stats={s}

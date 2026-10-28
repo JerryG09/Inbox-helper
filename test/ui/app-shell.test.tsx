@@ -1,6 +1,10 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import Page from "@/app/page";
+import { InboxApp } from "@/components/InboxApp";
+import { SIMULATED_MODE } from "@/lib/processing/live-contract";
+
+// AI-01: src/app/page.tsx is now a server wrapper that resolves the mode; the client app is InboxApp.
+const Page = () => <InboxApp mode={SIMULATED_MODE} />;
 
 beforeEach(() => {
   window.scrollTo = vi.fn() as unknown as typeof window.scrollTo;

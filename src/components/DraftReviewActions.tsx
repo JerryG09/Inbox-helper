@@ -1,4 +1,5 @@
 import { canApprove, hadBlocker } from "@/lib/domain/transitions";
+import { useLiveCopy } from "./RuntimeMode";
 import type { InboxRecord } from "@/lib/domain/types";
 
 type Props = {
@@ -14,13 +15,14 @@ type Props = {
 // Approve/Reject record an internal review decision only. There is no send path.
 export function DraftReviewActions({ r, onDraft, onRecheck, onApprove, onReject, onNextPending }: Props) {
   const approvable = canApprove(r);
+  const liveCopy = useLiveCopy();
   return (
     <>
       <div className="detailblock">
         <div className="detailheading"><span className="heading-icon ai-icon">✎</span> Draft response <span className="edit-label">Human-editable</span></div>
         <div className="field"><label htmlFor="draftEditor">Editable response</label><textarea id="draftEditor" className="draftarea" value={r.currentDraft ?? ""} onChange={(e) => onDraft(e.target.value)}></textarea></div>
         <div className="spacer"></div>
-        <div className="row"><span className="muted tiny">Editing any approved draft resets its review to Pending.</span>{hadBlocker(r) && <button className="btn small" onClick={onRecheck}>Run limited mock check</button>}</div>
+        <div className="row"><span className="muted tiny">Editing any approved draft resets its review to Pending.</span>{hadBlocker(r) && <button className="btn small" onClick={onRecheck}>{liveCopy ? "Run limited phrase check" : "Run limited mock check"}</button>}</div>
         <div className="spacer"></div>
         <details><summary className="small">View preserved original AI output</summary><div className="readback">{r.originalAiDraft}</div></details>
       </div>

@@ -100,5 +100,7 @@ export function viewAfterReveal(records: readonly InboxRecord[]): InboxView {
 export const initials = (r: InboxRecord) =>
   (r.candidateName || r.importedId).split(/\s+/).map((n) => n[0] || "").slice(0, 2).join("").toUpperCase();
 
+// Limited phrase list (V1.1 phrases + AI-01 additions for genuine model drafts). Used by the human recheck, approval
+// and the server-side live safety check; passing it never proves a draft safe.
 export const forbiddenDraft = (v: string) =>
-  /\b(you have been hired|you've been hired|you are hired|you're hired|offer letter is being prepared|your application has been accepted)\b/i.test(v);
+  /\b(you have been hired|you've been hired|you are hired|you're hired|offer letter is being prepared|your application has been accepted|pleased to offer you|offer of employment|you (?:have )?got the (?:job|role|position)|you have been selected|you've been selected|your start date is|you have not been successful|you have been unsuccessful)\b/i.test(v);

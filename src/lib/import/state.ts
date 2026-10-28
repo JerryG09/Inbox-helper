@@ -52,13 +52,13 @@ export function resetState(s: ImportState): ImportState {
 
 // Start an operation over an immutable snapshot of target keys (I1). A batch targets Queued records; a retry targets
 // Failed records only (never Completed/Approved/Rejected). Refused (op: null) while another operation is in flight.
-export function startOperation(s: ImportState, kind: OperationKind, keys: readonly string[]): { state: ImportState; op: Operation | null } {
+export function startOperation(s: ImportState, kind: OperationKind, keys: readonly string[], live = false): { state: ImportState; op: Operation | null } {
   if (s.activeOp) return { state: s, op: null };
   const eligible = kind === "batch" ? "queued" : "failed";
   const wanted = new Set(keys);
   const targets = s.records.filter((r) => wanted.has(r.key) && r.processing === eligible).map((r) => r.key);
   if (!targets.length) return { state: s, op: null };
-  const op: Operation = { id: s.opSeq + 1, kind, keys: Object.freeze(targets) };
+  const op: Operation = { id: s.opSeq + 1, kind, keys: Object.freeze(targets), ...(live ? { live } : {}) };
   const set = new Set(targets);
   const records = s.records.map((r) => (set.has(r.key) ? { ...r, processing: "processing" as const, error: undefined } : r));
   return { state: { ...s, records, opSeq: op.id, activeOp: op }, op };

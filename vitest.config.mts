@@ -7,9 +7,10 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   plugins: [react()],
-  resolve: { alias: { "@": path.resolve(__dirname, "src") } },
+  // `server-only` throws outside a React Server build; unit tests exercise server modules directly.
+  resolve: { alias: { "@": path.resolve(__dirname, "src"), "server-only": path.resolve(__dirname, "test/support/server-only.ts") } },
   test: {
-    include: ["test/ui/**/*.test.tsx", "test/reference/**/*.test.ts", "test/domain/**/*.test.ts", "test/import/**/*.test.ts", "test/inbox/**/*.test.ts"],
+    include: ["test/ui/**/*.test.tsx", "test/reference/**/*.test.ts", "test/domain/**/*.test.ts", "test/import/**/*.test.ts", "test/inbox/**/*.test.ts", "test/live/**/*.test.ts", "test/live/**/*.test.tsx"],
     environment: "jsdom",
   },
 });

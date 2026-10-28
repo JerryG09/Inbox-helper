@@ -1,7 +1,9 @@
 import type { IntentId } from "../domain/intents";
 import type { InboxRecord, OutcomeSource, ValidMessage } from "../domain/types";
+import type { ProviderMeta } from "./live-contract";
 
-// Adapter seam (contract §7). UI-03 uses the simulated processor in ./mock; a real provider is separately authorized.
+// Adapter seam (contract §7). Simulated adapters live in ./mock; the genuine Anthropic adapter is ./live-client (AI-01).
+// `meta` is provider call metadata (never candidate-facing); simulated outcomes carry none.
 export type ProcessOutcome =
   | {
       key: string;
@@ -13,8 +15,9 @@ export type ProcessOutcome =
       draft: string;
       attentionReasons: string[];
       blocked: boolean;
+      meta?: ProviderMeta;
     }
-  | { key: string; ok: false; source: OutcomeSource; code: string; description: string };
+  | { key: string; ok: false; source: OutcomeSource; code: string; description: string; meta?: ProviderMeta };
 
 export type ProcessBatch = (messages: ValidMessage[]) => Promise<ProcessOutcome[]>;
 export type RetryMessage = (recordKey: string) => Promise<ProcessOutcome>;
@@ -41,7 +44,7 @@ export const UNSUPPORTED_HIRING_FLAG = "Unsupported hiring decision";
 // Apply one outcome. Identity and original candidate fields are never touched; every completed record starts Pending.
 export function applyOutcome(r: InboxRecord, o: ProcessOutcome): InboxRecord {
   if (o.key !== r.key) throw new Error(`outcome ${o.key} does not belong to record ${r.key}`);
-  if (!o.ok) return { ...r, processing: "failed", error: { code: o.code, description: o.description }, review: undefined, outcomeSource: o.source };
+  if (!o.ok) return { ...r, processing: "failed", error: { code: o.code, description: o.description }, review: undefined, outcomeSource: o.source, providerMeta: o.meta };
   return {
     ...r,
     processing: "completed",
@@ -57,5 +60,6 @@ export function applyOutcome(r: InboxRecord, o: ProcessOutcome): InboxRecord {
     historicalAiFindings: o.blocked ? [BLOCKED_FINDING] : o.attentionReasons,
     needsRecheck: o.blocked,
     outcomeSource: o.source,
+    providerMeta: o.meta,
   };
 }
