@@ -182,3 +182,50 @@ test("the API rejects caller-supplied provider parameters and cross-origin calls
   expect(r3.status()).toBe(413);
   expect(await fakeCalls(page)).toHaveLength(0);
 });
+
+// AI-01 R1 (P0). Deterministic FAKE-provider evidence, not genuine model behaviour: the fake returns an unverified
+// offer that the pre-R1 detector missed, while reporting unsupported_hiring_decision: false.
+test("R1: unverified offer reported safe by the provider is Blocked; full human correction lifecycle to Results and CSV", async ({ page }) => {
+  const UNSAFE = "Congratulations Nia, we would like to offer you the Customer Support role.";
+  const dialogs: string[] = [];
+  await processAll(page, [["R101", "Nia Obi", "Outcome", "Did I get the Customer Support role? [[offer]]"]]);
+  page.on("dialog", (d) => dialogs.push(d.message()));
+  await page.selectOption("#reviewFilterSelect", "All");
+  await pick(page, "Nia Obi");
+  await expect(page.locator("#draftEditor")).toHaveValue(UNSAFE);
+  await expect(page.locator(".message.active .badge.block")).toHaveText("✕ Blocked");
+  await expect(page.locator("#attentionPanel")).toContainText("BLOCKED · Unsupported hiring outcome");
+  await expect(page.locator("#attentionPanel")).toContainText("The original AI reply asserted a hiring decision");
+  await expect(btn(page, "Approve draft")).toBeDisabled();
+  await page.screenshot({ path: `${EVIDENCE}/r1-fake-offer-blocked-1440.png`, fullPage: true, animations: "disabled" });
+
+  await page.locator("#draftEditor").fill("Hi Nia, we are delighted to offer you the position."); // still unsafe
+  await expect(page.locator("#attentionPanel")).toContainText("Original AI claim needs rechecking");
+  await expect(btn(page, "Approve draft")).toBeDisabled();
+  await btn(page, "Run limited phrase check").click();
+  await expect.poll(() => dialogs.length).toBe(1);
+  expect(dialogs[0]).toContain("Blocker remains");
+  await expect(btn(page, "Approve draft")).toBeDisabled();
+
+  await page.locator("#draftEditor").fill("Hi Nia, thank you for your message. We cannot confirm any hiring decision or offer at this time; the recruitment team will follow up.");
+  await expect(btn(page, "Approve draft")).toBeDisabled(); // edit alone does not clear the blocker
+  await btn(page, "Run limited phrase check").click();
+  await expect(page.locator("#attentionPanel")).toContainText("Initial AI claim corrected in the current draft.");
+  await expect(page.locator("#humanReviewStatus")).toHaveText("Pending"); // recheck never approves
+  await btn(page, "Approve draft").click();
+  await expect(page.locator("#humanReviewStatus")).toHaveText("Approved");
+  await page.locator("#attentionPanel ~ details summary").click();
+  await expect(page.locator("#attentionPanel ~ details .readback")).toHaveText("Initial AI output asserted unsupported hiring decision");
+
+  await page.click("#nav-results");
+  await expect(page.locator("#results-view tbody tr td")).toHaveText(["Nia Obi", "Completed", "Job information", "Approved", "Corrected — approved after review", "Initial AI claim corrected"]);
+  await page.screenshot({ path: `${EVIDENCE}/r1-fake-offer-results-1440.png`, fullPage: true, animations: "disabled" });
+  const [dl] = await Promise.all([page.waitForEvent("download"), btn(page, "Download CSV results").click()]);
+  const text = readFileSync((await dl.path())!, "utf8");
+  expect(text).toContain(`"${UNSAFE}"`); // original AI draft preserved
+  expect(text).toContain('"Initial AI output asserted unsupported hiring decision"');
+  expect(text).toContain('"Corrected — approved after review"');
+  expect(text).toContain("We cannot confirm any hiring decision or offer at this time");
+  const calls = await fakeCalls(page);
+  expect(calls).toHaveLength(1);
+});

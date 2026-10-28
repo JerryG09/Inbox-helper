@@ -1,4 +1,5 @@
 import { INTENTS, type IntentId } from "../domain/intents";
+import { containsHiringClaim } from "../safety/hiring-claims";
 import type { InboxRecord, ProcessingStatus, ReviewStatus } from "../domain/types";
 
 // Inbox view logic ported from stats()/filtered()/groupedList()/currentRecord() in the approved V1.1 prototype.
@@ -100,7 +101,6 @@ export function viewAfterReveal(records: readonly InboxRecord[]): InboxView {
 export const initials = (r: InboxRecord) =>
   (r.candidateName || r.importedId).split(/\s+/).map((n) => n[0] || "").slice(0, 2).join("").toUpperCase();
 
-// Limited phrase list (V1.1 phrases + AI-01 additions for genuine model drafts). Used by the human recheck, approval
-// and the server-side live safety check; passing it never proves a draft safe.
-export const forbiddenDraft = (v: string) =>
-  /\b(you have been hired|you've been hired|you are hired|you're hired|offer letter is being prepared|your application has been accepted|pleased to offer you|offer of employment|you (?:have )?got the (?:job|role|position)|you have been selected|you've been selected|your start date is|you have not been successful|you have been unsuccessful)\b/i.test(v);
+// Limited deterministic hiring-claim check (AI-01 R1: shared detector in ../safety/hiring-claims). Used by the human
+// recheck, approval and the server-side live safety check; passing it never proves a draft safe.
+export const forbiddenDraft = (v: string) => containsHiringClaim(v);

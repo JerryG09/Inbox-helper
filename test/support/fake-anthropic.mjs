@@ -4,6 +4,7 @@
 //   [[delay:N]] wait N ms then succeed      [[fail:STATUS]] return that HTTP error (after any delay)
 //   [[fail-once]] fail with 500 on the first call for this message, succeed afterwards
 //   [[truncate]] stop_reason max_tokens     [[schema]] malformed JSON      [[hired]] draft asserts a hire
+//   [[offer]] draft makes an unverified offer (AI-01 R1) while reporting unsupported_hiring_decision: false
 import { createServer } from "node:http";
 
 const PORT = Number(process.env.FAKE_ANTHROPIC_PORT ?? 3199);
@@ -44,7 +45,7 @@ createServer(async (req, res) => {
     primary_intent: /interview/i.test(msg) ? "interview_scheduling" : /appl/i.test(msg) ? "application_status" : "job_information",
     secondary_intents: /link/i.test(msg) ? ["documentation_technical"] : [],
     summary: "Fake upstream summary for a synthetic test message.",
-    draft_reply: msg.includes("[[hired]]") ? `Congratulations ${first}, you have been hired!` : `Hi ${first}, thank you for your message. The recruitment team will review it and follow up. (fake upstream draft)`,
+    draft_reply: msg.includes("[[hired]]") ? `Congratulations ${first}, you have been hired!` : msg.includes("[[offer]]") ? `Congratulations ${first}, we would like to offer you the Customer Support role.` : `Hi ${first}, thank you for your message. The recruitment team will review it and follow up. (fake upstream draft)`,
     attention_reasons: [],
     unsupported_hiring_decision: false,
   };

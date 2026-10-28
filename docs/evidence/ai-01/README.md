@@ -85,3 +85,49 @@ When any record is Processing, an existing-style `.notice` with `role="status"` 
 - The deterministic phrase check blocks hire claims whatever the model reports. It is a limited list and does not prove a draft safe.
 - The CSV keeps its 14 accepted columns and has no provenance column; the UI shows provenance. A provenance column would need a contract change.
 - Formal WCAG 2.2 AA certification remains UI-06 work.
+
+---
+
+## AI-01 R1 — Safety Correction (P0: unsupported hiring-claim detection)
+
+Starting HEAD `ef5c8d8`. The records above are unchanged; this section is an addition.
+
+**Defect.** A provider draft containing an affirmative hiring or offer claim, with the model reporting `unsupported_hiring_decision: false`, could become Completed/Pending and approvable if the phrase was not on the short deterministic list.
+- At `fb7d65b` (V1.1 list) the detector returned `false` for both "Congratulations, we are pleased to offer you the Customer Support role." and "You have been selected for the position."
+- At `ef5c8d8`, AI-01 had added those two exact phrases. Equivalent wording still passed, and two cautious negations were wrongly blocked.
+
+**Reproduction before the fix.** `test/live/hiring-claims.test.ts` was run against the unmodified `ef5c8d8`: **21 of 53 failed**.
+- 17 missed claims (`expected false to be true`), for example "We would like to offer you the Customer Support role.", "Your offer has been confirmed." and "You've been shortlisted for the final stage."
+- 2 false positives (`expected true to be false`): "We cannot confirm that you have been selected." and "We are unable to confirm whether you have been selected."
+- 1 provider case (`expected { … blocked: false } to match { blocked: true }`) and 1 lifecycle case.
+
+**Change.** There is now one detector, `src/lib/safety/hiring-claims.ts` (`containsHiringClaim`). `forbiddenDraft()` keeps its interface and delegates to it, so the provider check, `canApprove()` and `recheckDraft()` share one rule set.
+- **What it detects:** being hired or employed; being selected, shortlisted or successful; the employer offering, extending or making an offer; an offer that is confirmed, prepared, issued or "on its way"; an offer letter; an application accepted; "welcome to the team"; a start date. It also keeps the existing rejection phrases.
+- **Wording:** contractions and typographic apostrophes are handled.
+- **Ignored matches:** a match does not count when the sentence is a question, or when the same clause has an earlier negation or conditional word (not, no, cannot, can't, unable, if, once, whether, when, until, unless, may, might, could, should).
+- **Model flag:** a deterministic finding always blocks; the model's flag can only add a block, never remove one.
+
+**Tests.**
+- **Positives (26):** both R1 cases, 21 other affirmative wordings, and the V1.1 phrases.
+- **Negatives (18):** the eight brief controls, plus negation, question, hypothetical and future-conditional wording. All four genuine AI-01 drafts must also stay unblocked.
+- **Provider:** a false flag with unsafe drafts is blocked with the reason "Unsupported hiring decision". A true flag blocks. A false flag with a cautious draft is not blocked.
+- **`canApprove()`:** rejects unsafe current drafts.
+- **Lifecycle:** a still-unsafe recheck fails, a corrected recheck passes but stays Pending, and approval is explicit. The original draft and historical finding are preserved, and the CSV separates the current state from history.
+- **Existing behaviour:** the M003 simulated fixture is unchanged.
+
+**Browser proof.** This is deterministic fake-provider testing, not genuine model behaviour.
+- The test is `test/visual/live-flow.spec.ts` › "R1: unverified offer reported safe…". The fake upstream's `[[offer]]` marker returns "Congratulations Nia, we would like to offer you the Customer Support role." with the flag false.
+- Flow: import → fake processing → Blocked → Approve disabled → still-unsafe edit fails recheck → corrected edit passes recheck (Pending) → explicit approval → Results ("Corrected — approved after review" / "Initial AI claim corrected") → CSV keeps the original draft and the finding.
+- No real Anthropic tokens were used. Screenshots: `screenshots/r1-fake-offer-blocked-1440.png` and `screenshots/r1-fake-offer-results-1440.png`.
+
+**Mutation test.** Removing the `we would like / we'd like … to offer` rule failed 4 tests: 2 detector cases, 1 provider case and 1 lifecycle case. The file was restored byte-identical (SHA-1 `d3898c88…`) and the suite passed again.
+
+**Results.** Unit: 259 passed. Playwright: 280 passed — 266 simulated, with 212 parity cases at 0 px, and 14 live against the fake upstream. lint, typecheck, build, `verify:reference` and `git diff --check` are clean.
+
+**Why no new paid run.** The defect is in a deterministic function applied after the model responds. Its behaviour is fully determined by the draft text, and the fake upstream feeds the same server path the same shape of input. Provider configuration, prompt, schema and parameters are unchanged.
+
+**Remaining limitations.**
+- The detector is still a limited phrase-pattern safeguard, not semantic moderation. Novel wordings can still pass, for example "the role is yours" or "pack your bags for Monday". Human review remains required.
+- A negation word earlier in the same clause suppresses a match. For example, "Not only have we decided to hire you…" passes. This is intentional, to avoid blocking cautious replies.
+- A negation in a later clause does not suppress a match, so "You have been selected, though not yet confirmed" is blocked. This conservative false positive is acceptable.
+- UX-AI-01 and UX-AI-02 are unchanged and still await owner sign-off.
