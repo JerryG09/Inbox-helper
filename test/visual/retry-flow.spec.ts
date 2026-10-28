@@ -144,6 +144,60 @@ test("delayed retry: control is not re-entrant and counts reconcile while in fli
   await expectCounts(page, 6, 6, 0); // terminal state
 });
 
+// UX-05A-01: in-flight records say Processing (not Queued); the notice disappears on completion or failure.
+const QUEUED = "Queued for processing. No review actions are available.";
+const PROCESSING = "Processing this message. No review actions are available until processing finishes.";
+
+test("UX-05A-01: Queued wording is unchanged before processing", async ({ page }) => {
+  await page.goto("/");
+  await btn(page, "Load 6-message sample").click();
+  await btn(page, "Process 6 valid messages →").click();
+  await page.click("#nav-inbox");
+  await page.selectOption("#reviewFilterSelect", "All");
+  await expect(page.locator(".rightpane").getByRole("status")).toHaveText(QUEUED);
+  await expect(page.getByText(PROCESSING)).toHaveCount(0);
+});
+
+// The fault-injection adapter delays only successful steps (adapter unchanged in R1), so the failure case is immediate.
+for (const [outcome, plan] of [["completes", ["ok", "delay:400"]], ["fails", ["ok", "throw"]]] as const) {
+  test(`UX-05A-01: retry in-flight notice is removed when it ${outcome}`, async ({ page }) => {
+    await reveal(page, { "b1:r6": [...plan] });
+    // Under All/All the in-flight record stays visible (under the Failed filter it leaves the list while Processing).
+    await page.selectOption("#reviewFilterSelect", "All");
+    await pick(page, "Fatima Yusuf");
+    await btn(page, RETRY_ONE).click();
+    const status = page.locator(".rightpane").getByRole("status");
+    if (outcome === "completes") {
+      await expect(status).toHaveText(PROCESSING);
+      await expect(page.getByText(QUEUED)).toHaveCount(0);
+      await expectCounts(page, 6, 6, 0);
+      await expect(live(page)).toContainText("Retry succeeded.");
+      await expect(page.locator(".message.active")).toBeFocused();
+    } else {
+      await expectCounts(page, 5, 5, 1);
+      await expect(page.locator(".notice.block")).toContainText("Simulated processing failed unexpectedly");
+      await expect(live(page)).toHaveText("Retry failed. The message remains in the Failed queue; other messages unchanged.");
+      await expect(page.locator("#retryOne")).toBeFocused();
+    }
+    await expect(page.getByText(PROCESSING)).toHaveCount(0);
+    await expect(page.getByText(QUEUED)).toHaveCount(0);
+  });
+}
+
+// Evidence capture for UX-05A-01 (no approved V1.1 equivalent: the prototype has no in-flight state).
+for (const [width, height] of [[1440, 900], [390, 844]] as const) {
+  test(`UX-05A-01 evidence @${width}: in-flight Processing notice`, async ({ page }) => {
+    await page.setViewportSize({ width, height });
+    await reveal(page, { "b1:r6": ["ok", "delay:5000"] });
+    await page.selectOption("#reviewFilterSelect", "All");
+    await pick(page, "Fatima Yusuf");
+    await btn(page, RETRY_ONE).click();
+    await expect(page.locator(".rightpane").getByRole("status")).toHaveText(PROCESSING); // defined in-flight state
+    await page.mouse.move(0, 0);
+    await page.screenshot({ path: `test/visual/artifacts/ux-05a-01-processing-${width}.app.png`, fullPage: true, animations: "disabled" });
+  });
+}
+
 test("stale retry result after Reset and a new import does not mutate the new batch", async ({ page }) => {
   await reveal(page, { "b1:r6": ["ok", "delay:500"] });
   await btn(page, "Failed queue (1)").click();

@@ -55,7 +55,12 @@ export function CandidateReview(p: Props) {
     );
   }
   if (r.processing !== "completed") {
-    return <>{head}<div className="notice mt">Queued for processing. No review actions are available.</div></>;
+    // UX-05A-01 (owner-authorized copy/accessibility exception, 28 Oct 2026): Processing is no longer labelled "Queued".
+    // Provider-neutral wording; role="status" exposes it politely without assertive announcements.
+    const notice = r.processing === "processing"
+      ? "Processing this message. No review actions are available until processing finishes."
+      : "Queued for processing. No review actions are available.";
+    return <>{head}<div className="notice mt" role="status">{notice}</div></>;
   }
 
   const primary = r.primaryIntent!;
