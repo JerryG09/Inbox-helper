@@ -20,6 +20,7 @@ import {
   clearFilters, initialInboxView, intentLabel, nextPending, normalizeView, selectRecord, setAttentionOnly, setProcessFilter,
   setReviewFilter, showFailedQueue, viewAfterReveal, type InboxView,
 } from "@/lib/inbox/inbox";
+import { downloadCsv } from "@/lib/export/export-csv";
 import { simulationAdapters } from "@/lib/processing/mock";
 import type { OperationKind } from "@/lib/processing/operation";
 import type { ProcessBatch } from "@/lib/processing/processor";
@@ -276,7 +277,14 @@ export default function Page() {
         />
       </section>
       <section id="results-view" className={view === "results" ? undefined : "hidden"}>
-        <ResultsWorkspace onNavigate={navigate} />
+        <ResultsWorkspace
+          records={records}
+          onNavigate={navigate}
+          onDownload={() => {
+            downloadCsv(stateRef.current.records);
+            announce("CSV download started. No draft was approved, rejected or sent.");
+          }}
+        />
       </section>
     </AppShell>
   );

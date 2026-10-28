@@ -11,8 +11,8 @@ import pixelmatch from "pixelmatch";
 const REF = path.resolve("reference/hifi-v1.1");
 const CANONICAL = "file://" + path.join(REF, "prototype/MUST-Inbox-Helper-HiFi-V1.1-APPROVED.html");
 const OUT = path.resolve("test/visual/artifacts");
-// UI-05A writes a new report; earlier reports (ui-04-r1 and before) are historical evidence and are never rewritten.
-const REPORT = path.resolve("docs/evidence/ui-05a/parity-report.json");
+// Each slice writes its own report; earlier reports (ui-05a and before) are historical evidence and are never rewritten.
+const REPORT = path.resolve("docs/evidence/ui-05b/parity-report.json");
 mkdirSync(OUT, { recursive: true });
 
 type Step = (page: Page) => Promise<void>;
@@ -35,10 +35,11 @@ const selectReview = (v: string): Step => async (page) => { await clickIfVisible
 const pick = (name: string): Step => (page) => page.locator(".message", { hasText: name }).click();
 // Defined terminal state (no sleeps): every record is Completed or Failed, read from the metric cards in both pages.
 const settled: Step = (page) => page.waitForFunction(() => {
-  const n = [...document.querySelectorAll(".metric .number")].map((e) => parseInt(e.textContent || "", 10));
+  const n = [...document.querySelectorAll("section:not(.hidden) .metric .number")].map((e) => parseInt(e.textContent || "", 10));
   return n.length === 4 && n[1]! + n[3]! === n[0];
 }).then(() => undefined);
 const retryClick = (text: string): Step => seq(click(text), settled);
+const toResults: Step = (page) => page.click("#nav-results");
 const REVEAL: Step = seq(click("Load 6-message sample"), click("Process 6 valid messages →"), click("Reveal simulated AI results →"));
 
 // Each state is reached by the same user steps in the app and in the approved HTML.
@@ -101,6 +102,16 @@ const STATES: Record<string, Step> = {
   "retry-recovered-show-all": seq(REVEAL, retryClick("Retry failed"), selectReview("All"), pick("Fatima Yusuf")),
   "inbox-after-failed-import": seq(REVEAL, (page) => page.click("#nav-import"), upload("malformed.csv"), (page) => page.click("#nav-inbox")),
   "results-empty": (page) => page.click("#nav-results"),
+  // UI-05B Results states (prototype renderResults()), reached by the same clicks in the approved HTML.
+  "results-initial": seq(REVEAL, toResults),
+  "results-queued-before-reveal": seq(click("Load 6-message sample"), click("Process 6 valid messages →"), toResults),
+  "results-partially-reviewed": seq(REVEAL, pick("Ada Okafor"), click("Approve draft"), click("Reject draft"), toResults),
+  "results-after-retry": seq(REVEAL, pick("Ada Okafor"), click("Approve draft"), clickIfVisible("← All messages"), retryClick("Retry failed"), toResults),
+  "results-corrected-drafts": seq(
+    REVEAL, pick("Sarah James"), fill(SAFE), click("Run limited mock check"), click("Approve draft"),
+    selectReview("All"), pick("David Chen"), async (page) => { await page.selectOption("#primaryIntent", "Documentation / technical"); },
+    selectReview("All"), pick("Ada Okafor"), click("Approve draft"), selectReview("All"), pick("Ada Okafor"), fill("Hi Ada, could you share two alternative times?"), toResults,
+  ),
 };
 const WIDTHS: [number, number][] = [[1440, 900], [390, 844], [320, 700], [768, 1024]];
 const FROZEN: Record<string, string> = {
