@@ -1,0 +1,2 @@
+# Downloaded CSV evidence is byte-exact RFC 4180 (CRLF line endings).
+docs/evidence/**/*.csv -text -whitespace
