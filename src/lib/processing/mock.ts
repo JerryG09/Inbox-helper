@@ -50,3 +50,45 @@ export function simulateOutcome(m: ValidMessage): ProcessOutcome {
 }
 
 export const simulateBatch: ProcessBatch = async (messages) => messages.map(simulateOutcome);
+
+// SIMULATED retry — port of retryOne() in the approved V1.1 prototype. The canned recovery binds only to the exact
+// M005 fixture, reconstructed from the record's original validated message; anything else is re-simulated as above.
+const RETRY_FIXTURE_OUTCOMES: Record<string, Canned> = {
+  M005: { ok: true, primaryIntent: "documentation_technical", secondaryIntents: [], summary: "Candidate reports a resume upload issue. Mock retry succeeded.", attentionReasons: [], blocked: false, draft: "Hi Fatima, sorry you experienced an upload problem. Could you share the error shown so the recruitment team can investigate?" },
+};
+
+export function simulateRetryOutcome(m: ValidMessage): ProcessOutcome {
+  const canned = RETRY_FIXTURE_OUTCOMES[exactFixtureId(m) ?? ""];
+  return canned ? ({ key: m.key, source: "simulated_fixture", ...canned } as ProcessOutcome) : simulateOutcome(m);
+}
+
+export const simulateRetry: ProcessBatch = async (messages) => messages.map(simulateRetryOutcome);
+
+// Controlled fault injection for reliability tests. One step is consumed per attempt for each INTERNAL key; with no
+// step left the base behavior applies; adapters given the same plan share its steps. "throw" rejects the whole adapter
+// call; "delay:<ms>" settles after a delay. Synthetic — says nothing about a real provider.
+export type SimStep = "ok" | "fail" | "missing" | "duplicate" | "throw" | `delay:${number}`;
+export type SimPlan = Record<string, SimStep[]>;
+
+export function controlledAdapter(base: (m: ValidMessage) => ProcessOutcome, plan: SimPlan): ProcessBatch {
+  return async (messages) => {
+    const steps = messages.map((m) => [m, plan[m.key]?.shift() ?? "ok"] as const);
+    const delay = Math.max(0, ...steps.map(([, s]) => (s.startsWith("delay:") ? Number(s.slice(6)) : 0)));
+    if (delay) await new Promise((r) => setTimeout(r, delay));
+    if (steps.some(([, s]) => s === "throw")) throw new Error("simulated adapter exception");
+    return steps.flatMap(([m, s]): ProcessOutcome[] => {
+      if (s === "missing") return [];
+      if (s === "fail") return [{ key: m.key, ok: false, source: "simulated_fixture", code: "simulated_timeout", description: "Simulated AI provider timeout" }];
+      const o = base(m);
+      return s === "duplicate" ? [o, o.ok ? { ...o, summary: `${o.summary} (conflicting duplicate)` } : { ...o }] : [o];
+    });
+  };
+}
+
+// Browser test hook: a plan placed on window before the app loads routes the simulated adapters through
+// controlledAdapter. Client-only, in-memory and simulation-only; it cannot reach a network or a real provider.
+export function simulationAdapters(): { batch: ProcessBatch; retry: ProcessBatch } {
+  const plan = typeof window === "undefined" ? undefined : (window as { __MUST_SIM_PLAN__?: SimPlan }).__MUST_SIM_PLAN__;
+  if (!plan) return { batch: simulateBatch, retry: simulateRetry };
+  return { batch: controlledAdapter(simulateOutcome, plan), retry: controlledAdapter(simulateRetryOutcome, plan) };
+}

@@ -14,10 +14,10 @@ export type ReviewHandlers = {
   onReject: (key: string) => void;
 };
 
-type Props = { r: InboxRecord | null; editedSinceRender: boolean; onBackToList: () => void; onNextPending: () => void } & ReviewHandlers;
+type Props = { r: InboxRecord | null; editedSinceRender: boolean; onBackToList: () => void; onNextPending: () => void; onRetry: (key: string) => void } & ReviewHandlers;
 
 // Right pane from details() in the approved V1.1 HTML. The original candidate message is always shown, verbatim.
-// Classification correction, draft editing and review decisions are live (UI-04); retry is UI-05.
+// Classification correction, draft editing and review decisions are live (UI-04); failed-only retry is live (UI-05A).
 export function CandidateReview(p: Props) {
   const { r, onBackToList, onNextPending } = p;
   if (!r) {
@@ -49,7 +49,7 @@ export function CandidateReview(p: Props) {
         <div className="detailblock">
           <div className="notice block"><b>AI processing failed</b><p>{`${r.error?.description}. No classification or draft was produced.`}</p></div>
           <p className="muted small">Retry affects this message only. Previous human reviews remain unchanged.</p>
-          <button className="btn primary">Retry this message (simulation) →</button>
+          <button id="retryOne" className="btn primary" onClick={() => p.onRetry(r.key)}>Retry this message (simulation) →</button>
         </div>
       </>
     );

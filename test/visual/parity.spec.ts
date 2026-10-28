@@ -11,7 +11,8 @@ import pixelmatch from "pixelmatch";
 const REF = path.resolve("reference/hifi-v1.1");
 const CANONICAL = "file://" + path.join(REF, "prototype/MUST-Inbox-Helper-HiFi-V1.1-APPROVED.html");
 const OUT = path.resolve("test/visual/artifacts");
-const REPORT = path.resolve("docs/evidence/ui-04-r1/parity-report.json");
+// UI-05A writes a new report; earlier reports (ui-04-r1 and before) are historical evidence and are never rewritten.
+const REPORT = path.resolve("docs/evidence/ui-05a/parity-report.json");
 mkdirSync(OUT, { recursive: true });
 
 type Step = (page: Page) => Promise<void>;
@@ -32,6 +33,12 @@ const fill = (text: string): Step => (page) => page.fill("#draftEditor", text);
 // On ≤900 px the filters live in the list pane, hidden while a detail is open; return to the list first.
 const selectReview = (v: string): Step => async (page) => { await clickIfVisible("← All messages")(page); await page.selectOption("#reviewFilterSelect", v); };
 const pick = (name: string): Step => (page) => page.locator(".message", { hasText: name }).click();
+// Defined terminal state (no sleeps): every record is Completed or Failed, read from the metric cards in both pages.
+const settled: Step = (page) => page.waitForFunction(() => {
+  const n = [...document.querySelectorAll(".metric .number")].map((e) => parseInt(e.textContent || "", 10));
+  return n.length === 4 && n[1]! + n[3]! === n[0];
+}).then(() => undefined);
+const retryClick = (text: string): Step => seq(click(text), settled);
 const REVEAL: Step = seq(click("Load 6-message sample"), click("Process 6 valid messages →"), click("Reveal simulated AI results →"));
 
 // Each state is reached by the same user steps in the app and in the approved HTML.
@@ -87,6 +94,11 @@ const STATES: Record<string, Step> = {
   "review-blocked-reintroduced": seq(REVEAL, pick("Sarah James"), fill(SAFE), click("Run limited mock check"), fill(SAFE + " You are hired.")),
   "review-all-reviewed": seq(REVEAL, pick("Ada Okafor"), click("Reject draft"), click("Reject draft"), click("Reject draft"), click("Reject draft"), click("Reject draft")),
   "review-all-reviewed-show-all": seq(REVEAL, pick("Ada Okafor"), click("Reject draft"), click("Reject draft"), click("Reject draft"), click("Reject draft"), click("Reject draft"), selectReview("All")),
+  // UI-05A retry states (prototype retryOne()/retryFailed()), reached by the same clicks in the approved HTML.
+  "retry-one-recovered": seq(REVEAL, click("Failed queue (1)"), pick("Fatima Yusuf"), retryClick("Retry this message (simulation) →")),
+  "retry-failed-toolbar": seq(REVEAL, retryClick("Retry failed")),
+  "retry-after-human-reviews": seq(REVEAL, pick("Ada Okafor"), fill("Hi Ada, edited by a human."), click("Approve draft"), click("Reject draft"), clickIfVisible("← All messages"), retryClick("Retry failed")),
+  "retry-recovered-show-all": seq(REVEAL, retryClick("Retry failed"), selectReview("All"), pick("Fatima Yusuf")),
   "inbox-after-failed-import": seq(REVEAL, (page) => page.click("#nav-import"), upload("malformed.csv"), (page) => page.click("#nav-inbox")),
   "results-empty": (page) => page.click("#nav-results"),
 };

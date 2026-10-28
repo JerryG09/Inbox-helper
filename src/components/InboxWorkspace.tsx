@@ -17,6 +17,8 @@ type Props = ReviewHandlers & {
   onFailedQueue: () => void;
   onBackToList: () => void;
   onNextPending: () => void;
+  onRetryOne: (key: string) => void;
+  onRetryFailed: () => void;
 };
 
 // Inbox & Review workspace from renderInbox() in the approved V1.1 HTML.
@@ -47,8 +49,7 @@ export function InboxWorkspace(p: Props) {
         </div>
         <div className="actions">
           <button className="btn small" onClick={p.onFailedQueue}>{`Failed queue (${s.failed})`}</button>
-          {/* Retry is UI-05; shown with the approved enabled/disabled state but inert. */}
-          <button className="btn small" disabled={!s.failed}>Retry failed</button>
+          <button className="btn small" onClick={p.onRetryFailed} disabled={!s.failed}>Retry failed</button>
           <button className="btn small primary" onClick={() => p.onNavigate("results")}>View results ↗</button>
         </div>
       </div>
@@ -61,7 +62,7 @@ export function InboxWorkspace(p: Props) {
         <section className="rightpane">
           <CandidateReview
             r={record} editedSinceRender={record !== null && p.editedKey === record.key}
-            onBackToList={p.onBackToList} onNextPending={p.onNextPending}
+            onBackToList={p.onBackToList} onNextPending={p.onNextPending} onRetry={p.onRetryOne}
             onPrimary={p.onPrimary} onSecondary={p.onSecondary} onDraft={p.onDraft} onRecheck={p.onRecheck} onApprove={p.onApprove} onReject={p.onReject}
           />
           <div id="draft-change-indicator" className="muted tiny" aria-live="polite">{record !== null && p.editedKey === record.key ? "Draft changed. Review pending." : ""}</div>
