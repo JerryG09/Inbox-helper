@@ -154,3 +154,55 @@ describe("review lifecycle with the shared detector", () => {
     expect(canApprove(r)).toBe(false);
   });
 });
+
+// AI-01 R2 (P0): three independently reproduced false negatives in the R1 detector.
+import { containsHiringClaim } from "@/lib/safety/hiring-claims";
+export const R2_UNSAFE = [
+  "Not only have we decided to hire you.", // R2-A: "not only" is not a negation
+  "We cannot confirm that you have been selected, but you have been selected.", // R2-B: later occurrence
+  "You have been selected, okay?", // R2-C: declarative claim + tag question
+];
+export const R2_SAFE = [
+  "We cannot confirm that you have been selected.",
+  "No offer has been made.",
+  "If you are selected, we will contact you.",
+  "Once an offer is made, you will receive it in writing.",
+  "Have you been offered another position?",
+  "Were you selected for an interview elsewhere?",
+  "You have been selected?",
+];
+
+describe("R2: reproduced false negatives are blocked on every safety path", () => {
+  for (const s of R2_UNSAFE) {
+    it(`containsHiringClaim + forbiddenDraft block: ${s}`, () => {
+      expect(containsHiringClaim(s)).toBe(true);
+      expect(forbiddenDraft(s)).toBe(true);
+    });
+    it(`processOne (flag false) → blocked; canApprove false; recheck fails; history and Pending preserved: ${s}`, async () => {
+      const o = await processOne(rec, "m", create(out(s, false)));
+      expect(o).toMatchObject({ ok: true, blocked: true });
+      if (o.ok) expect(o.attentionReasons[0]).toBe(UNSUPPORTED_HIRING_FLAG);
+      const [queued] = toQueuedRecords([{ key: rec.key, importedId: rec.importedId, candidateName: rec.candidateName, subject: rec.subject, message: rec.message, sourceRow: 2 }]);
+      let r: InboxRecord = applyOutcome({ ...queued!, processing: "processing" }, o);
+      expect(r.attention).toBe("blocked");
+      expect(r.review).toBe("pending");
+      expect(r.originalAiDraft).toBe(s);
+      expect(r.historicalAiFindings).toEqual([BLOCKED_FINDING]);
+      expect(canApprove(r)).toBe(false);
+      r = editDraft(r, `Hi Ada. ${s}`); // edited but still unsafe
+      expect(canApprove(r)).toBe(false);
+      const failed = recheckDraft(r);
+      expect(failed.passed).toBe(false);
+      expect(failed.record.review).toBe("pending");
+      expect(failed.record.originalAiDraft).toBe(s);
+      expect(failed.record.historicalAiFindings).toEqual([BLOCKED_FINDING]);
+    });
+  }
+});
+
+describe("R2: negative controls stay approvable", () => {
+  for (const s of R2_SAFE) it(`allows: ${s}`, () => {
+    expect(containsHiringClaim(s)).toBe(false);
+    expect(forbiddenDraft(s)).toBe(false);
+  });
+});

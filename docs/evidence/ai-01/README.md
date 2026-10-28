@@ -131,3 +131,42 @@ Starting HEAD `ef5c8d8`. The records above are unchanged; this section is an add
 - A negation word earlier in the same clause suppresses a match. For example, "Not only have we decided to hire you…" passes. This is intentional, to avoid blocking cautious replies.
 - A negation in a later clause does not suppress a match, so "You have been selected, though not yet confirmed" is blocked. This conservative false positive is acceptable.
 - UX-AI-01 and UX-AI-02 are unchanged and still await owner sign-off.
+
+## AI-01 R2 — Final P0 hiring-claim detector correction
+
+**Scope.** This round fixes three independently reproduced false negatives in `src/lib/safety/hiring-claims.ts`. The provider prompt, configuration, schema, API route, concurrency, timeouts, CSV, UI/CSS, frozen reference, UX-AI-01/02 and the four genuine acceptance records are unchanged.
+
+**Before-fix reproduction** (R1 code, HEAD `7d1c0f0`). 6 tests failed and 60 passed:
+- **R2-A** "Not only have we decided to hire you." was allowed. The "not" in "not only" counted as a negation cue.
+- **R2-B** "We cannot confirm that you have been selected, but you have been selected." was allowed. `RegExp.exec()` checked only the first, negated occurrence.
+- **R2-C** "You have been selected, okay?" was allowed. The whole sentence was skipped because it ended in "?".
+
+**Correction.**
+1. The detector now evaluates every occurrence of each pattern (`matchAll` over global copies of the same patterns) instead of only the first.
+2. "not only" is removed from the clause before the negation/conditional cue test.
+3. A sentence ending in "?" suppresses only a claim in its final clause, where no `, ; : — -` boundary falls between the claim and the "?". A claim followed by a separate tag clause is declarative.
+4. Negation and conditional cues still apply only to the claim's own clause.
+
+**Tests.**
+- The 26 R1 positives and 18 R1 negatives are preserved.
+- Each R2 case is blocked by `containsHiringClaim()` and `forbiddenDraft()`.
+- For each R2 case, `processOne()` with `unsupported_hiring_decision: false` returns Blocked with "Unsupported hiring decision". `canApprove()` is false, before and after a still-unsafe edit, and `recheckDraft()` fails. The original AI draft, historical finding and Pending status are preserved.
+- These 7 controls are allowed: "We cannot confirm that you have been selected.", "No offer has been made.", "If you are selected, we will contact you.", "Once an offer is made, you will receive it in writing.", "Have you been offered another position?", "Were you selected for an interview elsewhere?" and "You have been selected?".
+
+**Browser proof.** This is fake-provider testing, not genuine model behaviour. The new `[[tag]]` marker makes the fake upstream return "You have been selected, okay?" with the flag false.
+- The test is `test/visual/live-flow.spec.ts` › "R2: tag-question selection claim…".
+- Flow: Blocked → Approve disabled → an R2-A edit fails recheck → corrected edit passes recheck (Pending) → explicit approval → historical finding shown → the CSV keeps the original draft.
+- No real API calls were made.
+
+**Mutation tests.** Each fix was removed on its own, then the file was restored from a backup:
+- Removing the "not only" strip failed 2 tests (R2-A).
+- Reverting to first-occurrence `exec` failed 2 tests (R2-B).
+- Restoring the whole-sentence "?" skip failed 2 tests (R2-C).
+
+**Results.** Unit: 272 passed. Playwright: 281 passed — 266 simulated, with 212 parity cases unchanged and the parity report byte-identical, and 15 live against the fake upstream. `verify:reference`, lint, typecheck, build and `git diff --check` are clean.
+
+**Remaining limitations.**
+- The detector is still a limited phrase-pattern safeguard, not semantic moderation. Novel wordings can pass, and human review remains required.
+- The R1 limitation that "Not only have we decided to hire you…" passes is superseded: it is now blocked.
+- Clause splitting depends on punctuation. An unpunctuated tag, such as "You have been selected right?", is still treated as a question.
+- A negation cue earlier in the same clause still suppresses a claim. For example, "No doubt you have been selected" passes.

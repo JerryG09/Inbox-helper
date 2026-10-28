@@ -229,3 +229,34 @@ test("R1: unverified offer reported safe by the provider is Blocked; full human 
   const calls = await fakeCalls(page);
   expect(calls).toHaveLength(1);
 });
+
+// AI-01 R2 (P0). FAKE-provider evidence: a declarative selection claim with a tag question, which the R1 detector
+// skipped as a question, while the provider reports unsupported_hiring_decision: false.
+test("R2: tag-question selection claim reported safe by the provider is Blocked and never approvable without correction", async ({ page }) => {
+  const UNSAFE = "You have been selected, okay?";
+  const dialogs: string[] = [];
+  await processAll(page, [["R201", "Lola Fe", "Outcome", "Was I selected? [[tag]]"]]);
+  page.on("dialog", (d) => dialogs.push(d.message()));
+  await page.selectOption("#reviewFilterSelect", "All");
+  await pick(page, "Lola Fe");
+  await expect(page.locator("#draftEditor")).toHaveValue(UNSAFE);
+  await expect(page.locator(".message.active .badge.block")).toHaveText("✕ Blocked");
+  await expect(page.locator("#attentionPanel")).toContainText("The original AI reply asserted a hiring decision");
+  await expect(btn(page, "Approve draft")).toBeDisabled();
+  await page.locator("#draftEditor").fill("Hi Lola, not only have we decided to hire you."); // still unsafe (R2-A)
+  await btn(page, "Run limited phrase check").click();
+  await expect.poll(() => dialogs.length).toBe(1);
+  expect(dialogs[0]).toContain("Blocker remains");
+  await expect(btn(page, "Approve draft")).toBeDisabled();
+  await page.locator("#draftEditor").fill("Hi Lola, we cannot confirm that you have been selected. The recruitment team will follow up.");
+  await expect(btn(page, "Approve draft")).toBeDisabled();
+  await btn(page, "Run limited phrase check").click();
+  await expect(page.locator("#humanReviewStatus")).toHaveText("Pending");
+  await btn(page, "Approve draft").click();
+  await expect(page.locator("#humanReviewStatus")).toHaveText("Approved");
+  await page.locator("#attentionPanel ~ details summary").click();
+  await expect(page.locator("#attentionPanel ~ details .readback")).toHaveText("Initial AI output asserted unsupported hiring decision");
+  await page.click("#nav-results");
+  const [dl] = await Promise.all([page.waitForEvent("download"), btn(page, "Download CSV results").click()]);
+  expect(readFileSync((await dl.path())!, "utf8")).toContain(`"${UNSAFE}"`); // original AI draft preserved
+});
