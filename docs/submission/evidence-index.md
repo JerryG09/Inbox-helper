@@ -38,14 +38,15 @@ Deliverable numbers refer to `submission-manifest.md`.
 | E-D2-06 | Owner acceptance of UX-AI-01/02 and AI-01 merge | D2 | M | commit `6ebc7fb` docs | `6ebc7fb` | ACCEPTED | — | 1 |
 | E-D2-07 | Fifth genuine call (Scenario E, withdrawal) | D2 closeout | G | `docs/evidence/day2-closeout/` | `6a23fe2` | ACCEPTED | One call; timestamp is capture time | 1, 6 |
 | E-D2-08 | Day 2 log, including unlearning observations | D2 | M | `docs/daily-log/2026-10-28-day2.md` | `6a23fe2` | ACCEPTED | — | 5, 7 |
-| E-D3-01 | Requirements-to-evidence coverage audit | D3 · AI-02A | U, F | `docs/evidence/day3-ai02/qualification-matrix.md` | this branch | PENDING | Claude-authored audit; Claude-run results | 1, 4 |
-| E-D3-02 | Real SDK over HTTP: 429/500/529/401/network/timeout → safe codes; one attempt each | D3 · AI-02B | F, U | `test/live/provider-http.test.ts` | this branch | PENDING | Local HTTP fake, not the real API | 4 |
-| E-D3-03 | Concurrency cap is per request only (2 requests → 4 in flight) | D3 · AI-02B | F, U | same file | this branch | PENDING | KNOWN_LIMITATION | 4, 6 |
-| E-D3-04 | Adversarial safety matrix; residual risks pinned (KL-1..3, R-REJ, R-INJ, R-WD, R-PII, F-HIST) | D3 · AI-02C | F, U | `test/live/adversarial-safety.test.ts`, `docs/evidence/day3-ai02/safety-findings.md` | this branch | PENDING | Not model resistance | 1, 4, 6, 7 |
-| E-D3-05 | Mutation checks M1–M4 killed | D3 | U | `docs/evidence/day3-ai02/README.md` | this branch | PENDING | Claude-run; not yet independently rerun | 1 |
-| E-D3-06 | Preliminary accessibility observations A11Y-01..03 | D3 · AI-02D | U, S | `test/visual/a11y-preliminary.spec.ts`, `docs/evidence/day3-ai02/README.md` | this branch | PENDING | No screen reader; not WCAG | 4 |
-| E-D3-07 | Genuine performance/cost summary (n = 5) | D3 · AI-02E | G (historical) | `docs/evidence/day3-ai02/performance-notes.md` | this branch | PENDING | Not a benchmark; price not re-verified | 1, 6 |
-| E-D3-08 | Submission manifest and recording shot list | D3 · EVIDENCE-03 | M | `docs/submission/` | this branch | PENDING | Plans only | 1, 6 |
-| E-D3-09 | Day 3 log and unlearning | D3 | M | `docs/daily-log/2026-10-29-day3.md`, `docs/unlearning/day3-observations.md` | this branch | PENDING | Day 3 not closed | 5, 7 |
+| E-D3-01 | Requirements-to-evidence coverage audit | D3 · AI-02A | U, F | `docs/evidence/day3-ai02/qualification-matrix.md` | `47ca9c7` | PENDING | Claude-authored audit; Claude-run results | 1, 4 |
+| E-D3-02 | Real SDK over HTTP: 429/500/529/401/network/timeout → safe codes; one attempt each | D3 · AI-02B | F, U | `test/live/provider-http.test.ts` | `47ca9c7` | PENDING | Local HTTP fake, not the real API | 4 |
+| E-D3-03 | Concurrency cap is per request only (2 requests → 4 in flight) | D3 · AI-02B | F, U | same file | `47ca9c7` | PENDING | KNOWN_LIMITATION | 4, 6 |
+| E-D3-04 | Adversarial safety matrix; residual risks pinned (KL-1..3, R-REJ [later resolved, E-D3-10], R-INJ, R-WD, R-PII, F-HIST) | D3 · AI-02C | F, U | `test/live/adversarial-safety.test.ts`, `docs/evidence/day3-ai02/safety-findings.md` | `47ca9c7` | PENDING | Not model resistance | 1, 4, 6, 7 |
+| E-D3-05 | Mutation checks M1–M4 killed | D3 | U | `docs/evidence/day3-ai02/README.md` | `47ca9c7` | PENDING | Claude-run; not yet independently rerun | 1 |
+| E-D3-06 | Preliminary accessibility observations A11Y-01..03 | D3 · AI-02D | U, S | `test/visual/a11y-preliminary.spec.ts`, `docs/evidence/day3-ai02/README.md` | `47ca9c7` | PENDING | No screen reader; not WCAG | 4 |
+| E-D3-07 | Genuine performance/cost summary (n = 5) | D3 · AI-02E | G (historical) | `docs/evidence/day3-ai02/performance-notes.md` | `47ca9c7` | PENDING | Not a benchmark; price not re-verified | 1, 6 |
+| E-D3-08 | Submission manifest and recording shot list | D3 · EVIDENCE-03 | M | `docs/submission/` | `47ca9c7` | PENDING | Plans only | 1, 6 |
+| E-D3-09 | Day 3 log and unlearning | D3 | M | `docs/daily-log/2026-10-29-day3.md`, `docs/unlearning/day3-observations.md` | `47ca9c7` | PENDING | Day 3 not closed | 5, 7 |
+| E-D3-10 | R-REJ resolved: rejection patterns in the shared detector; before-fix reproduction; 10 positive + 11 negative + lifecycle tests; fake-provider browser proof; mutation killed | D3 · AI-02 R1 | F, U | `docs/evidence/day3-ai02-r1/`, `test/live/adversarial-safety.test.ts`, `test/visual/live-flow.spec.ts` | `611b383` | PENDING | Limited phrase list; other rejection phrasings may pass | 1, 4, 6, 7 |
 | E-D4-* | Held-out dataset, frozen labels, evaluation, accessibility audit | D4 | — | — | — | PLANNED | — | 1, 4, 6 |
 | E-D5-* | Loom, demo, Final directive, final unlearning note, final SHA | D5 | — | — | — | MISSING | — | 1, 3, 6, 7 |

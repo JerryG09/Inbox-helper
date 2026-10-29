@@ -89,6 +89,7 @@ See `safety-findings.md`.
 - **Protected (A, 19 tests):** injection flag, delimiter forgery, schema control, hire/offer/selection blocks, withdrawal warning, blocked lifecycle.
 - **KNOWN_LIMITATION, pinned with `it.fails`:** KL-1..3.
 - **QUALIFICATION_GAP / residual risk, pinned:** R-REJ (new), R-INJ, R-WD, and F-HIST. R-PII is asserted as current behaviour.
+- **AI-02 R1 update:** R-REJ → **RESOLVED** (`docs/evidence/day3-ai02-r1/README.md`). The remaining pins (9) are unchanged.
 - **OUT_OF_SCOPE:** genuine-model resistance, which needs authorised paid calls.
 
 ## AI-02D — Preliminary accessibility

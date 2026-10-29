@@ -80,3 +80,8 @@ See `docs/daily-log/2026-10-29-day3.md` § Verification for exact commands and c
 - The adversarial matrix is a bounded, hand-written sample, not exhaustive.
 - Accessibility checks are preliminary; see the table above.
 - No new screenshots were captured: existing UX-AI-02 @390 and UI-05A evidence already cover the visible retry progress.
+
+## AI-02 R1 follow-up
+After this qualification was accepted, AI-02 R1 corrected **R-REJ** on branch `day3/ai-02-r1-rejection-safety`. Evidence is in `docs/evidence/day3-ai02-r1/README.md`.
+
+The findings recorded above are kept as originally written. R-REJ's current status is RESOLVED; every other finding is unchanged.
