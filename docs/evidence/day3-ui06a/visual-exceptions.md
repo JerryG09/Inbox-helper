@@ -66,3 +66,30 @@ The ~504 px "unexplained" residue noted under UX-A11Y-01 was investigated in `do
 - **Control experiment:** the unchanged approved HTML with only `ui-06a-accessibility.css` injected matches the app at **0 px in all 24 cases**. So every difference, inside and outside the ring, is produced by painting the new focus outline. No other product presentation or behaviour differs.
 - **Classification:** all 24 cases → **`EXPLAINED_ACCESSIBILITY_EXCEPTION`**. The exact Chromium rasterisation mechanism is not established.
 - **Status of UX-A11Y-01/02/03:** still `IMPLEMENTED_PENDING_OWNER_VISUAL_ACCEPTANCE`.
+
+## OWNER FINAL VISUAL ACCEPTANCE — 29 OCTOBER 2026
+
+*Appended at Day 3 closeout. The observations and statuses above are preserved as the historical chronology.*
+
+**Decision:** the owner explicitly approved **UX-A11Y-01**, **UX-A11Y-02** and **UX-A11Y-03**, covering their implementation and documented visual appearance. The approval was communicated through the owner-authorised Day 3 final closeout directive. No separate signed document was supplied.
+
+**Basis:**
+- Accepted diagnostic HEAD `66e535d2de1e21fae126d7e91c3e904037bf8b2b`; the architect's UI-06A R1 decision was `UI06A_R1_FOCUS_PARITY_ACCEPTED`.
+- The original frozen stylesheet `src/styles/hifi-v1.1.css` is unchanged (SHA-256 `7c3d48ef…a799`), and so is the approved reference bundle.
+- Normal, unfocused presentation remains pixel-identical to the approved HTML.
+- The 24 originally differing parity states are intentional, focus-dependent accessibility exceptions.
+- The control (reference + UI-06A stylesheet) matches the app at **0 px in all 24 cases**.
+- The small outside-ring differences are deterministic antialiasing effects of the focus styling. The exact Chromium compositor mechanism remains **unverified**.
+- **No other product changes were approved** by this acceptance.
+
+| Exception | Current status |
+|---|---|
+| UX-A11Y-01 — enhanced keyboard focus on form fields, selects and the draft editor | **OWNER_VISUALLY_ACCEPTED** (29 Oct 2026) |
+| UX-A11Y-02 — visible keyboard focus on the CSV upload control | **OWNER_VISUALLY_ACCEPTED** (29 Oct 2026) |
+| UX-A11Y-03 — accessible secondary-intent grouping, unchanged visual layout | **OWNER_VISUALLY_ACCEPTED** (29 Oct 2026) |
+
+**Still open, and not covered by this acceptance:**
+- A11Y-04 (frozen button/link focus ring 2.79:1)
+- "Review status" label semantics
+- screen-reader, Safari and Firefox, zoom/reflow and forced-colours testing
+- formal WCAG 2.2 AA assessment

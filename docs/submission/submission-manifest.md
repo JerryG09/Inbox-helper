@@ -1,17 +1,34 @@
 # MUST submission manifest — seven required deliverables
 
-**Last updated:** 29 Oct 2026 (Day 3, AI-02 / EVIDENCE-03 slice, branch `day3/ai-02-reliability-evidence`). **Final repository SHA:** not yet recorded (Day 5).
+**Last updated:** 29 Oct 2026, end of Day 3. Day 3 is `DAY_3_ENGINEERING_AND_EVIDENCE_ACCEPTED_PENDING_MERGE`, so `main` is still `6a23fe2`. The first version of this manifest is in commit `47ca9c7`.
 
-Status values: `COMPLETE`, `IN_PROGRESS`, `DRAFT_EXISTS`, `PLANNED`, `MISSING`. Nothing here is final until the Day 5 independent submission review.
+**Final repository SHA:** not yet recorded (Day 5).
+
+**Status values:**
+- `COMPLETE`
+- `IN_PROGRESS`
+- `DRAFT_EXISTS`
+- `AVAILABLE`
+- `PLANNED`
+- `MISSING`
+
+**Nothing here is final until the Day 5 independent submission review. The seven-item submission is not complete.**
 
 | # | Deliverable | Status | Canonical path / URL | Supporting evidence | Outstanding actions | Target day | Final verification |
 |---|---|---|---|---|---|---|---|
-| 1 | Loom walkthrough of the AI-native engineering process | PLANNED | URL: none yet | `docs/submission/recording-shotlist.md` (Recording 1); `evidence-index.md` | Record after Day 4 evidence exists; check the link is accessible | Day 5 | Not verified |
-| 2 | `intent.md` | DRAFT_EXISTS | `docs/intent.md` | Owner sign-off recorded in `1bffd94` (Day 1) | Review for accuracy against the final product; decide whether the canonical copy moves to repo root | Day 5 | Not verified |
-| 3 | `Final directive.md` | MISSING | — | Directives exist as owner instructions; earlier Day 1 prompt is at `docs/MUST-Inbox-Helper-DAY1-01-Claude-Prompt-V1.1.1.md` | Author the final directive; agree its scope with the owner | Day 5 | Not verified |
-| 4 | Working code and accurate README | IN_PROGRESS | Repository `JerryG09/Inbox-helper`, `main`; `README.md` | Day 1–2 accepted merges; Day 3 qualification (`docs/evidence/day3-ai02/`) | Update README with the Day 3 limitations (R-REJ, per-request concurrency, local-only endpoint); record the final SHA | Day 5 | Not verified |
-| 5 | Five dated daily logs | IN_PROGRESS (2 of 5 complete) | `docs/daily-log/` | `2026-10-27-day1.md` and `2026-10-28-day2.md` complete; `2026-10-29-day3.md` open | Close Day 3 after review and merge; write Day 4 and Day 5 | Day 5 | Not verified |
-| 6 | Five-minute working product demonstration | PLANNED | URL: none yet | `recording-shotlist.md` (Recording 2) | Record; label genuine and simulated/fake evidence on screen; state that nothing is auto-sent | Day 5 | Not verified |
-| 7 | One-page unlearning note | IN_PROGRESS (source notes only) | Final note: not yet created | `docs/unlearning/day1-observations.md`, `docs/unlearning/day3-observations.md`. **Day 2 observations: no separate file** (Day 2 lessons are recorded in `docs/daily-log/2026-10-28-day2.md`). | Synthesise into one page after Day 4 | Day 5 | Not verified |
+| 1 | Loom walkthrough of the AI-native engineering process | **NOT RECORDED** (PLANNED) | none yet | `recording-shotlist.md` Recording 1; `evidence-index.md` | Record after the Day 4 evidence; check the link is accessible | Day 5 | Not verified |
+| 2 | `intent.md` | **AVAILABLE** (owner-approved 27 Oct) | `docs/intent.md` | `1bffd94`; REQ-03 requirement audit (`02e81cf`) | Final accuracy review against the shipped product; decide whether the canonical copy moves to the repo root | Day 5 | Not verified |
+| 3 | `Final directive.md` | **NOT PREPARED** (MISSING) | — | Day 1–3 directives as recorded in the daily logs | Author it and agree its scope with the owner | Day 5 | Not verified |
+| 4 | Working code and accurate README | **AVAILABLE**; README update outstanding | `JerryG09/Inbox-helper`. `main` = `6a23fe2`; Day 3 is accepted on `day3/final-evidence-closeout` but not merged | Day 1–3 accepted evidence | Fast-forward integration of Day 3 (owner authorisation). README limitations: R-REJ scope and residual risks, per-request concurrency, local-only endpoint, 10-message live limit, accessibility exceptions and A11Y-04. Record the final SHA. | Day 5 | Not verified |
+| 5 | Five dated daily logs | **IN_PROGRESS: 3 of 5 exist** | `docs/daily-log/` | Day 1 and Day 2 complete; Day 3 (`2026-10-29-day3.md`) accepted, pending merge | Day 4 and Day 5 logs | Day 5 | Not verified |
+| 6 | Five-minute working product demonstration | **NOT RECORDED** (PLANNED) | none yet | `recording-shotlist.md` Recording 2. It separates genuine Anthropic evidence, the local fake provider and simulation. | Record; label provenance on screen; state that nothing is auto-sent | Day 5 | Not verified |
+| 7 | One-page unlearning note | **NOT FINALISED** (source notes only) | final note: none yet | `docs/unlearning/day1-observations.md`, `docs/unlearning/day3-observations.md` (5 observations), Day 2 lessons in `docs/daily-log/2026-10-28-day2.md` | Synthesise into one page after Day 4 | Day 5 | Not verified |
 
-**Gate reminder (Evidence Contract §G):** all seven items accessible; final SHA recorded; demonstration claims match the product; safety, evaluation and accessibility limitations disclosed; links checked; no secrets or real candidate data; independent review passed.
+**Gate reminder (Evidence Contract §G):**
+- All seven items exist and are accessible.
+- The final SHA is recorded.
+- Demo claims match the product.
+- Safety, evaluation and accessibility limitations are disclosed.
+- Links are checked.
+- No secrets or real candidate data.
+- Independent review has passed.
