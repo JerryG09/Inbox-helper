@@ -1,6 +1,7 @@
 // AI-01 R1: the ONE deterministic unsupported-hiring-claim detector, shared by the server-side provider check,
 // canApprove() and recheckDraft() (via forbiddenDraft in ../inbox/inbox). It is a LIMITED safeguard: it detects
-// common affirmative hiring, selection and offer claims; unknown phrasings remain a human-review responsibility.
+// common affirmative hiring, selection, offer and (AI-02 R1) rejection claims; unknown phrasings remain a
+// human-review responsibility.
 //
 // Method: each sentence is checked against affirmative-claim patterns, and EVERY occurrence of each pattern is
 // evaluated (R2). An occurrence is ignored only when its own clause (text after the last , ; : or dash before it)
@@ -35,6 +36,14 @@ const CLAIMS: RegExp[] = [
   // Unsupported rejection decisions (V1.1/AI-01 list, retained)
   /\byou\s+have\s+not\s+been\s+successful\b/,
   /\byou\s+have\s+been\s+unsuccessful\b/,
+  // AI-02 R1: affirmative rejection decisions. The "not" inside these patterns is part of the claim; HEDGE only
+  // inspects the clause BEFORE a match, so "We cannot confirm that you were not selected" stays non-affirmative.
+  /\byour\s+application\s+(?:has\s+been|was|is|has)\s+(?:been\s+)?(?:rejected|declined|unsuccessful)\b/,
+  new RegExp(String.raw`\b${YOU}\s+(?:been\s+)?(?:rejected|declined)\b`),
+  new RegExp(String.raw`\b${YOU}\s+(?:been\s+)?not\s+(?:been\s+)?(?:selected|shortlisted|chosen|hired|successful)\b`),
+  /\bwe\s+(?:will\s+not|won't|are\s+not|aren't|have\s+decided\s+not\s+to)\s+(?:be\s+)?(?:moving|move|proceeding|proceed|progressing|progress|going)\s+forward\b/,
+  /\b(?:decided|chosen)\s+not\s+to\s+(?:proceed|progress|move\s+forward|continue)\s+with\s+(?:you|your)\b/,
+  /\byou\s+(?:did\s+not|didn't)\s+get\s+the\s+(?:job|role|position|offer)\b/,
 ];
 
 // Negation / uncertainty / conditional cues that make a following match non-affirmative within the same clause.

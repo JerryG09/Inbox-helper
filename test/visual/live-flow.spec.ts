@@ -260,3 +260,49 @@ test("R2: tag-question selection claim reported safe by the provider is Blocked 
   const [dl] = await Promise.all([page.waitForEvent("download"), btn(page, "Download CSV results").click()]);
   expect(readFileSync((await dl.path())!, "utf8")).toContain(`"${UNSAFE}"`); // original AI draft preserved
 });
+
+// AI-02 R1 (P0). FAKE-provider evidence: an unverified rejection decision, reported unsupported_hiring_decision: false.
+// Before R1 this draft was not detected (R-REJ, docs/evidence/day3-ai02-r1/before-fix-reproduction.txt).
+test("AI-02 R1: unsupported rejection reported safe by the provider is Blocked; correction, recheck and explicit approval to Results and CSV", async ({ page }) => {
+  const R1_EVIDENCE = "docs/evidence/day3-ai02-r1/screenshots";
+  mkdirSync(R1_EVIDENCE, { recursive: true });
+  const UNSAFE = "Hi Kemi, thank you for your patience. Unfortunately we will not be moving forward with your application.";
+  const dialogs: string[] = [];
+  await processAll(page, [["J301", "Kemi Ade", "Outcome", "Did I get the role? [[reject]]"]]);
+  page.on("dialog", (d) => dialogs.push(d.message()));
+  await page.selectOption("#reviewFilterSelect", "All");
+  await pick(page, "Kemi Ade");
+  await expect(page.locator("#draftEditor")).toHaveValue(UNSAFE);
+  await expect(page.locator(".message.active .badge.block")).toHaveText("✕ Blocked");
+  await expect(page.locator("#attentionPanel")).toContainText("The original AI reply asserted a hiring decision");
+  await expect(btn(page, "Approve draft")).toBeDisabled();
+  await page.screenshot({ path: `${R1_EVIDENCE}/r1-fake-rejection-blocked-1440.png`, fullPage: true, animations: "disabled" });
+
+  await page.locator("#draftEditor").fill("Hi Kemi, your application has been rejected."); // still unsafe
+  await btn(page, "Run limited phrase check").click();
+  await expect.poll(() => dialogs.length).toBe(1);
+  expect(dialogs[0]).toContain("Blocker remains");
+  await expect(btn(page, "Approve draft")).toBeDisabled();
+
+  const SAFE = "Hi Kemi, thank you for your patience. We have not made a decision on your application; the recruitment team will follow up.";
+  await page.locator("#draftEditor").fill(SAFE);
+  await expect(btn(page, "Approve draft")).toBeDisabled(); // edit alone does not clear the blocker
+  await btn(page, "Run limited phrase check").click();
+  await expect(page.locator("#attentionPanel")).toContainText("Initial AI claim corrected in the current draft.");
+  await expect(page.locator("#humanReviewStatus")).toHaveText("Pending"); // recheck never approves
+  await btn(page, "Approve draft").click();
+  await expect(page.locator("#humanReviewStatus")).toHaveText("Approved");
+  await page.locator("#attentionPanel ~ details summary").click();
+  await expect(page.locator("#attentionPanel ~ details .readback")).toHaveText("Initial AI output asserted unsupported hiring decision");
+
+  await page.click("#nav-results");
+  await expect(page.locator("#results-view tbody tr td")).toHaveText(["Kemi Ade", "Completed", "Job information", "Approved", "Corrected — approved after review", "Initial AI claim corrected"]);
+  await page.screenshot({ path: `${R1_EVIDENCE}/r1-fake-rejection-results-1440.png`, fullPage: true, animations: "disabled" });
+  const [dl] = await Promise.all([page.waitForEvent("download"), btn(page, "Download CSV results").click()]);
+  const text = readFileSync((await dl.path())!, "utf8");
+  expect(text).toContain(`"${UNSAFE}"`); // original AI draft preserved
+  expect(text).toContain('"Initial AI output asserted unsupported hiring decision"');
+  expect(text).toContain('"Corrected — approved after review"');
+  expect(text).toContain(SAFE);
+  expect(await fakeCalls(page)).toHaveLength(1);
+});

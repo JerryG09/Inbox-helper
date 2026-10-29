@@ -80,10 +80,67 @@ describe("fabricated hiring decisions, offers and rejections", () => {
   for (const d of ["No doubt you have been selected.", "You have been selected right?", "The role is yours."]) {
     it.fails(`KNOWN LIMITATION — affirmative claim not detected: "${d}"`, () => expect(containsHiringClaim(d)).toBe(true));
   }
-  // New Day 3 finding R-REJ: only "not been successful"/"unsuccessful" rejection wordings are in the pattern list.
-  for (const d of ["Your application has been rejected.", "You have been rejected.", "We regret to inform you that you were not selected.", "Unfortunately we will not be moving forward with your application.", "You did not get the job."]) {
-    it.fails(`RESIDUAL RISK — unsupported rejection not detected: "${d}"`, () => expect(containsHiringClaim(d)).toBe(true));
+});
+
+// R-REJ: found by Day 3 AI-02 qualification (47ca9c7, pinned with it.fails; before-fix output in
+// docs/evidence/day3-ai02-r1/before-fix-reproduction.txt). RESOLVED in AI-02 R1: these are now ordinary regressions.
+export const R_REJ = [
+  "Your application has been rejected.",
+  "You have been rejected.",
+  "We regret to inform you that you were not selected.",
+  "Unfortunately we will not be moving forward with your application.",
+  "You did not get the job.",
+];
+// Cautious wording that must stay approvable (negation, uncertainty, questions, hypotheticals).
+export const REJ_SAFE = [
+  "We have not made a decision on your application.",
+  "We cannot confirm whether your application was rejected.",
+  "Your application is still under review.",
+  "Please contact the recruitment team for your application status.",
+  "If your application is not selected, the recruitment team will notify you.",
+  "Have you received a rejection notice?",
+  "We cannot confirm that you were not selected.",
+  "If you are not shortlisted, the recruitment team will let you know.",
+  "We are unable to say whether you have been rejected.",
+  "Were you rejected by another employer?",
+  "Hi Sam, we have passed your question to the recruitment team, who will follow up.",
+];
+
+describe("AI-02 R1: unsupported rejection decisions (R-REJ resolved)", () => {
+  for (const d of R_REJ) {
+    it(`detector blocks: "${d}"`, () => expect(containsHiringClaim(d)).toBe(true));
+    it(`processOne with a falsely safe flag → blocked, hiring reason first: "${d}"`, async () => {
+      const o = await run("Did I get the role?", { draft_reply: `Hi Sam, thank you for your patience. ${d}`, unsupported_hiring_decision: false });
+      expect(o).toMatchObject({ ok: true, blocked: true });
+      expect(o.ok && o.attentionReasons[0]).toBe(UNSUPPORTED_HIRING_FLAG);
+    });
   }
+  for (const d of REJ_SAFE) {
+    it(`cautious wording stays approvable: "${d}"`, async () => {
+      expect(containsHiringClaim(d)).toBe(false);
+      const r = await toRecord("Any update?", { draft_reply: d });
+      expect(r.attention).toBe("none");
+      expect(canApprove(r)).toBe(true);
+    });
+  }
+  it("blocked rejection → unsafe edit fails recheck → cautious draft passes → stays Pending → explicit approval; history kept", async () => {
+    const original = "Hi Sam, your application has been rejected.";
+    let r = await toRecord("Did I get the role?", { draft_reply: original });
+    expect(r).toMatchObject({ attention: "blocked", needsRecheck: true, review: "pending" });
+    expect(canApprove(r)).toBe(false);
+    r = editDraft(r, "Hi Sam, unfortunately we will not be moving forward with your application.");
+    const unsafe = recheckDraft(r);
+    expect(unsafe.passed).toBe(false);
+    expect(canApprove(unsafe.record)).toBe(false);
+    r = editDraft(unsafe.record, "Hi Sam, we have not made a decision on your application. The recruitment team will follow up.");
+    expect(canApprove(r)).toBe(false); // editing alone never clears the blocker
+    const ok = recheckDraft(r);
+    expect(ok.passed).toBe(true);
+    expect(ok.record.review).toBe("pending"); // recheck never approves
+    expect(ok.record.originalAiDraft).toBe(original);
+    expect(ok.record.historicalAiFindings).toContain(BLOCKED_FINDING);
+    expect(approveDraft(ok.record).review).toBe("approved");
+  });
 });
 
 describe("withdrawal claims", () => {
