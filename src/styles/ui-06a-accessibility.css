@@ -1,0 +1,21 @@
+/* UI-06A accessibility overrides, loaded AFTER the frozen hifi-v1.1.css (which stays byte-for-byte unchanged).
+   Only keyboard-focus states are affected; unfocused presentation is untouched.
+   Focus colour #4f46e5: 6.29:1 on #fff, 5.89:1 on #f6f7ff (WCAG 1.4.11 needs >= 3:1). */
+
+/* UX-A11Y-01: the frozen `.field input, … {outline:none}` rule (later in the cascade, equal specificity) cancels the
+   global :focus-visible outline, leaving only a 0.11-alpha shadow. Restore a clear outline on keyboard focus. */
+.field input:focus-visible,
+.field textarea:focus-visible,
+.field select:focus-visible,
+.filtergrid select:focus-visible,
+.draftarea:focus-visible {
+  outline: 3px solid #4f46e5;
+  outline-offset: 2px;
+}
+
+/* UX-A11Y-02: #csvFile is sr-only (1x1 px) and FOLLOWS its visible label, so the label is styled from the shared
+   parent while the input has keyboard focus. Native file input and its keyboard activation are unchanged. */
+.blank:has(> #csvFile:focus-visible) > label[for="csvFile"] {
+  outline: 3px solid #4f46e5;
+  outline-offset: 3px;
+}

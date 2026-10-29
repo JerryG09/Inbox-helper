@@ -81,8 +81,8 @@ export function CandidateReview(p: Props) {
         </div>
         <div className="spacer"></div>
         <div className="field">
-          <label>Secondary intents</label>
-          <div className="secondary-options">
+          <label id="secondaryIntentsLabel">Secondary intents</label>
+          <div className="secondary-options" role="group" aria-labelledby="secondaryIntentsLabel">
             {INTENTS.filter((i) => i.id !== primary).map((i) => (
               <label key={i.id}><input type="checkbox" value={i.label} checked={r.secondaryIntents.includes(i.id)} onChange={(e) => p.onSecondary(r.key, i.id, e.target.checked)} />{i.label}</label>
             ))}

@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "@/styles/hifi-v1.1.css";
+import "@/styles/ui-06a-accessibility.css"; // UI-06A: focus-state overrides only, loaded after the frozen sheet
 
 export const metadata: Metadata = {
   title: "Candidate Inbox — Hi-fi V1.1 | MUST Quest Concept",

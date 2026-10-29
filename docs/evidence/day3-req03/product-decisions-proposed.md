@@ -16,3 +16,22 @@
 - The 10-message live limit means a large pile has to be split.
 - "Short" is requested, not enforced.
 - Model grouping quality has not yet been measured on held-out data (Day 4).
+
+## Owner acceptance — 29 October 2026
+
+*Appended. The proposals and the "PENDING" column above are kept as originally written at `da22c80`.*
+
+The owner **approved decisions P1–P6 as recommended**:
+
+| # | Accepted decision |
+|---|---|
+| P1 | Keep six fixed intent categories |
+| P2 | One primary group, with secondary intents |
+| P3 | Keep Review and CSV as the approved-reply handoff; defer Copy |
+| P4 | Retain the ten-message live limit |
+| P5 | Preserve the no-send scope |
+| P6 | Keep prompt-only short-reply guidance, pending the held-out evaluation |
+
+**Provenance:** the owner's approval was given in the ChatGPT project conversation on 29 October 2026. It was communicated to Claude Code through the UI-06A implementation directive (§11). No separate signed approval document was supplied.
+
+No feature was implemented as a result of these decisions.

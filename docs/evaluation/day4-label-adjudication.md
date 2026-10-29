@@ -8,6 +8,13 @@
 - Every label is **`AI_PROPOSED_UNVERIFIED`**, drafted by Claude Code (`claude-opus-5-5`). These labels are not ground truth.
 - **No model has seen this dataset.** It has not been scored or used for tuning.
 
+## Provenance clarification (UI-06A wording correction, 29 Oct 2026)
+- **The target Haiku evaluation has not been run on this held-out dataset.** No model has processed these messages.
+- **Claude generated both the synthetic messages and the proposed labels.** The labels are therefore not independent human ground truth.
+- **The owner must adjudicate and freeze the labels before the first evaluation run.**
+
+The messages and proposed labels are unchanged by this clarification.
+
 ## Freeze procedure (before any Day 4 model run)
 1. **The owner reviews each row.** For each one: accept, change the primary or secondaries, change attention, or mark an alternative primary as acceptable.
 2. **Claude applies only the owner's decisions** and writes `day4-candidate-messages-v1.0.json` with:

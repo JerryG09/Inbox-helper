@@ -42,7 +42,8 @@ test("draft editor, primary intent and filters expose accessible names", async (
   const boxes = page.locator(".secondary-options input[type=checkbox]");
   expect(await boxes.count()).toBeGreaterThan(0);
   for (const box of await boxes.all()) expect((await box.evaluate((el) => (el.closest("label")?.textContent ?? "").trim())).length).toBeGreaterThan(0);
-  await expect(page.getByRole("group", { name: "Secondary intents" })).toHaveCount(0); // OBSERVATION A11Y-03
+  // A11Y-03 (Day 3 AI-02 observation, asserted count 0) — corrected in UI-06A: the checkboxes are a named group.
+  await expect(page.getByRole("group", { name: "Secondary intents" })).toHaveCount(1);
 });
 
 test("focus visibility observations (recorded, not pass/fail on design)", async ({ page }, info) => {
@@ -68,9 +69,9 @@ test("processing and retry outcomes are announced through the polite global stat
   await expect(page.locator("#globalLive")).toContainText("Retry succeeded");
 });
 
-// A11Y-02 (reproduced defect candidate, product unchanged): the CSV input is sr-only (1×1 px), so its focus outline is
-// invisible, and its visible "Choose local CSV" label shows no focus change. Expected-failure until remediated (UI-06).
-test.fail("A11Y-02: keyboard focus on the CSV file control is visible on its label", async ({ page }) => {
+// A11Y-02: found in Day 3 AI-02 (pinned with test.fail at 47ca9c7): the sr-only CSV input's focus was invisible and
+// its visible label showed no change. Corrected in UI-06A (UX-A11Y-02); now an ordinary regression.
+test("A11Y-02: keyboard focus on the CSV file control is visible on its label", async ({ page }) => {
   await page.goto("/");
   await btn(page, "Load 6-message sample").focus();
   await page.keyboard.press("Shift+Tab");

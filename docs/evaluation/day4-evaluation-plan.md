@@ -1,5 +1,7 @@
 # Day 4 evaluation plan (proposed; requires owner label freeze and paid-call authorisation)
 
+**Status:** the target Haiku evaluation has **not** been run on the held-out dataset. Claude generated the synthetic messages and proposed labels, so they are not independent human ground truth. The owner must adjudicate and freeze the labels before the first evaluation run.
+
 ## Preconditions (all required before any model call)
 1. The owner has adjudicated `docs/evaluation/day4-label-adjudication.md`.
 2. The frozen file is committed and its SHA-256 recorded.
@@ -12,9 +14,13 @@
 
 ## Runs
 - **Baseline:** the deterministic keyword baseline (`npm run eval:baseline` logic) over the same frozen 30 messages. No cost.
-- **Model:** one pass through the product's own server path (`processOne`), so the drafts and safety checks match the product.
-  - 30 messages = 3 requests of 10, within the live limit.
-  - Every raw outcome is stored, including failures.
+- **Model:** one first pass. **The execution path must be chosen and recorded before the run.** It is one of:
+  - **(A) Product batch handler (recommended).** Three bounded requests of ten messages each to the existing `/api/process` route (`handleProcess` → `processRecords`).
+    - Inside each request, `processRecords` makes ten provider calls (at most two concurrently) via `processOne`.
+    - This exercises exactly the product's validation, safety checks and limits.
+  - **(B) A separately documented evaluation harness** that calls the provider directly. Its configuration must be documented and shown to match the product (prompt version, parameters, output schema, safety checks) before use.
+
+  Note: "three batch requests" (A) and "30 individual `processOne` invocations" are different execution paths. Under (A), the 30 `processOne` calls happen *inside* the three requests. Under (B), the harness must state which functions it invokes. The run record names the path used. Every raw outcome is stored, including failures.
 - **No retries are counted as first-pass results.** Any manual recovery retry is reported separately.
 - Expected cost, from the Day 2 average of ~1,450 input and ~230 output tokens per call: about 30 × (1,450 × $0.10 + 230 × $0.50)/M ≈ **$0.008**. The price must be re-verified before the run.
 
