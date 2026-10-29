@@ -55,3 +55,14 @@ The other **188 of 212** parity cases pass at 0 px, unchanged. The harness, its 
 | **Accessibility tree** | `group "Secondary intents"` → `checkbox "Application status"`, `checkbox "Interview scheduling" [checked]`, … (`ariaSnapshot` in `focus-measurements-after.jsonl`). |
 | **Pixel differences** | None: every parity state showing the review panel without a focused field passes at 0 px. |
 | **Status** | `IMPLEMENTED_PENDING_OWNER_VISUAL_ACCEPTANCE` (semantic only) |
+
+## UI-06A R1 diagnostic update (29 Oct 2026)
+
+*Appended. The UI-06A text above is kept as originally written.*
+
+The ~504 px "unexplained" residue noted under UX-A11Y-01 was investigated in `docs/evidence/day3-ui06a-r1/`:
+- **Precise count:** 238 px outside the permitted ring region for `review-empty-draft-1440`; 238–904 px across the 16 draft-editor cases; **0** for the 8 primary-select cases.
+- **What they are:** deterministic antialiasing differences of 1–4/255 on button corners and glyph edges near the editor. Caret hidden: unchanged. Repeat captures: identical.
+- **Control experiment:** the unchanged approved HTML with only `ui-06a-accessibility.css` injected matches the app at **0 px in all 24 cases**. So every difference, inside and outside the ring, is produced by painting the new focus outline. No other product presentation or behaviour differs.
+- **Classification:** all 24 cases → **`EXPLAINED_ACCESSIBILITY_EXCEPTION`**. The exact Chromium rasterisation mechanism is not established.
+- **Status of UX-A11Y-01/02/03:** still `IMPLEMENTED_PENDING_OWNER_VISUAL_ACCEPTANCE`.
