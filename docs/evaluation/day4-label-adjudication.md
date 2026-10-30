@@ -88,3 +88,14 @@ The **Alt** column lists primaries a reviewer may also accept.
 - One draft message at 0.65 against E020 was rephrased before commit.
 - The intent patterns overlap by design (the taxonomy is the same), but no text was copied.
 - None of the five genuine acceptance scenarios was reused.
+
+---
+
+## Owner decision — Friday 30 October 2026 (WAT), appended by EVAL-04B
+
+- **All 30 records:** the owner reviewed and approved them. 21 are unchanged from the proposals above; **9 are corrected**: H004, H007, H009, H013, H020, H022, H025, H026 and H030.
+- **Proposal table:** the table above is Claude's original proposal and is kept as it was. It does not show the owner's corrections.
+- **Approved reference:** the owner-adjudicated reference labels are in **`eval/heldout/day4-candidate-messages-v1.0.json`** (`FROZEN`, `owner_confirmed`). The corrections, owner attention reasons, distribution, hashes and validation are recorded in [`docs/evidence/day4-eval04b/owner-label-freeze.md`](../evidence/day4-eval04b/owner-label-freeze.md).
+- **Source draft:** `eval/heldout/day4-candidate-messages-v1.json` is **unchanged and remains `NOT_FROZEN` / `AI_PROPOSED_UNVERIFIED`**. It is the historical record of Claude's proposals.
+- **Provenance wording:** owner-adjudicated reference labels derived from AI-proposed labels. They are not blind human labels.
+- **Evaluation status:** no target-model evaluation and no baseline scoring has run against either file.
