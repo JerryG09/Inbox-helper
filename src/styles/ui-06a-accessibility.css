@@ -32,3 +32,34 @@ summary:focus-visible {
 .sidebar a:focus-visible {
   outline-color: #8a91fb;
 }
+
+/* UX-A11Y-05 (Day 4 UI-06C, pending owner visual acceptance): the "Needs attention only" filter checkbox kept the
+   frozen 2.79:1 ring. Same colour-only correction as A11Y-04; width and offset unchanged. */
+.checkline input[type="checkbox"]:focus-visible {
+  outline-color: #4f46e5;
+}
+
+/* UX-A11Y-06 (pending owner visual acceptance): WCAG 1.4.3. Each frozen colour is darkened (lightened on navy) within
+   its own hue to the smallest value measuring >= 4.5:1 on its actual background. Sizes, weights and spacing unchanged.
+   Decorative glyph icons (.metric-icon, .heading-icon, .intro-spark) are deliberately not recoloured (A11Y-08). */
+.grouphead span:nth-child(2) { color: #5f6f8d; }       /* #98a4ba 2.30 -> 4.64 on #f3f5fa */
+.footer { color: #60718c; }                              /* #8d9bb1 2.63 -> 4.62 on #f5f7fb */
+.work-toolbar-sub { color: #627187; }                    /* #8996a9 2.80 -> 4.63 on #f5f7fb */
+.readback { color: #63738d; }                            /* #8190a7 3.13 -> 4.65 on #fafbfe */
+.edit-label { color: #5361da; }                          /* #737ee1 3.25 -> 4.61 on #f0f2ff */
+.preview th { color: #64708c; }                          /* #75819c 3.64 -> 4.62 on #f5f7fb */
+.message:nth-of-type(3n) .avatar { color: #30796a; }     /* #378978 3.75 -> 4.62 on #e8f5f4 */
+.eyebrow { color: #5e6da9; }                             /* #6573ad 4.25 -> 4.62 on #f5f7fb */
+.side-fine { color: #7588a4; }                           /* #6e829f 4.29 -> 4.66 on #111d33 */
+.btn.danger { color: #b95259; }                          /* #bc5960 4.29 -> 4.60 on #fffafa */
+.queue-count { color: #626f87; }                         /* #65728b 4.45 -> 4.65 on #f3f5fb */
+
+/* UX-A11Y-07 (pending owner visual acceptance): WCAG 1.4.11. A white text field on a white panel is identified only by
+   its border (#dbe2ee / #d7def0, 1.30-1.35:1). Specificity equals the frozen base rules ((0,1,1) / (0,1,0); :where()
+   adds nothing), so the frozen :focus borders and the focus outlines still win. Selects are unchanged: their native
+   arrow and value identify them. */
+.field input:where(:not([type="checkbox"]):not([type="radio"])),
+.field textarea,
+.draftarea {
+  border-color: #8792a8;                                 /* 3.13:1 on #fff */
+}

@@ -214,9 +214,9 @@ test("@390 inbox-review: no keyboard trap in mobile review; reverse order mirror
   expect(back.slice(0, Math.min(idx, 5))).toEqual(forward.slice(Math.max(idx - 5, 0), idx).reverse());
 });
 
-// A11Y-05 (OPEN, not corrected — needs separate owner authorization): pins the reproduced defect so a fix is noticed.
-// Every visible checkbox is reached by keyboard; its indicator colour and contrast against the adjacent background are recorded.
-test("A11Y-05 reproduction: checkbox keyboard-focus indicators and their contrast", async ({ page }) => {
+// A11Y-05 regression (corrected in UI-06C; was 2.79:1 for "Needs attention only"): every visible checkbox reached by
+// keyboard must show an indicator of at least 3:1 against its adjacent background, unclipped.
+test("A11Y-05: checkbox keyboard-focus indicators reach 3:1", async ({ page }) => {
   const found: { viewport: string; state: string; label: string; color: string; bg: string; ratio: number; clipped: boolean }[] = [];
   for (const [w, h] of [[1440, 900], [390, 844]] as const) {
     await page.setViewportSize({ width: w, height: h });
@@ -235,14 +235,13 @@ test("A11Y-05 reproduction: checkbox keyboard-focus indicators and their contras
         });
         const label = await box.evaluate((e) => (e.closest("label")?.textContent ?? "").trim());
         found.push({ viewport: `${w}x${h}`, state, label, color: s.outline.color, bg: s.adjacentBackground, ratio: contrast(s.outline.color, s.adjacentBackground), clipped });
-        if (STAGE && s.outline.color === "rgb(138, 145, 251)") { const b = await box.locator("xpath=..").boundingBox(); if (b) await page.screenshot({ path: `${OUT}/screenshots/${STAGE}-a11y05-${label.replace(/\W+/g, "-").toLowerCase()}-${w}.png`, clip: { x: Math.max(b.x - 10, 0), y: Math.max(b.y - 10, 0), width: Math.min(b.width + 20, w), height: b.height + 20 } }); }
+        if (STAGE && /Needs attention only/.test(label)) { const b = await box.locator("xpath=..").boundingBox(); if (b) await page.screenshot({ path: `${OUT}/screenshots/${STAGE}-a11y05-${label.replace(/\W+/g, "-").toLowerCase()}-${w}.png`, clip: { x: Math.max(b.x - 10, 0), y: Math.max(b.y - 10, 0), width: Math.min(b.width + 20, w), height: b.height + 20 } }); }
       }
     }
   }
   found.forEach((f) => record("a11y05-checkboxes", f));
-  const failing = found.filter((f) => f.ratio < 3);
-  expect(failing.length, "A11Y-05 is expected to be OPEN until separately authorized").toBeGreaterThan(0);
-  expect(new Set(failing.map((f) => f.label))).toEqual(new Set(["Needs attention only"]));
+  expect(found.some((f) => f.label === "Needs attention only"), "the filter checkbox was reached").toBe(true);
+  expect(found.filter((f) => f.ratio < 3 || f.clipped)).toEqual([]);
 });
 
 // 1.4.3 Contrast (Minimum) scan: every visible text-bearing element's colour vs its effective solid background.

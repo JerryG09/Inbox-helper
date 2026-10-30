@@ -50,3 +50,18 @@ Date:        _____
 ```
 
 A11Y-05 (checkbox) is **not** part of this exception. It is unfixed and will be proposed separately.
+
+---
+
+## OWNER DECISION — 30 October 2026 (WAT), appended by UI-06C
+
+```text
+UX-A11Y-04:  OWNER_VISUALLY_ACCEPTED
+Date:        30 October 2026 (WAT)
+Scope:       exactly the Phase A implementation and evidence at 5a951f50635d3a08c2d453c555822cc782093d5f:
+             button/link/summary :focus-visible rings #4f46e5; navy sidebar keeps #8a91fb; outline geometry
+             unchanged; unfocused presentation unchanged; the twelve dedicated A11Y-04 parity cases as documented.
+Source:      owner/architect directive "DAY 4 UI-06C" (no signed document).
+```
+
+The pending decision block above is kept as written, for history. This acceptance does **not** extend to UX-A11Y-05, -06 or -07; those are proposed separately in `docs/evidence/day4-ui06c/visual-exceptions.md`.
