@@ -2,6 +2,8 @@
 
 **Last updated:** 29 Oct 2026, end of Day 3. Day 3 is `DAY_3_ENGINEERING_AND_EVIDENCE_ACCEPTED_PENDING_MERGE`, so `main` is still `6a23fe2`. The first version of this manifest is in commit `47ca9c7`.
 
+**Current state (30 Oct 2026, Day 4 Phase A):** Day 3 is merged, so `main` = `1991ec0`; the Day 3 note above is historical. Day 4 is OPEN on three separate, unintegrated branches (EVAL-04B `8fb8da1`, EVAL-04C `08b77e4`, Phase A accessibility); see `docs/evidence/day4-eval04a/README.md`. Item 5: the Day 4 log exists on the EVAL-04B branch.
+
 **Final repository SHA:** not yet recorded (Day 5).
 
 **Status values:**

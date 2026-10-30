@@ -19,3 +19,16 @@
   outline: 3px solid #4f46e5;
   outline-offset: 3px;
 }
+
+/* UX-A11Y-04 (Day 4, pending owner visual acceptance): the frozen button/link/summary ring #8a91fb is 2.79:1 on #fff and
+   2.60:1 on #f5f7fb (< 3:1). Recolour only; width (3px) and offset (3px) are unchanged. #4f46e5 is 6.29:1 / 5.86:1 there.
+   The navy sidebar keeps #8a91fb (6.03:1 on #111d33); #4f46e5 would drop it to 2.68:1. */
+button:focus-visible,
+a:focus-visible,
+summary:focus-visible {
+  outline-color: #4f46e5;
+}
+.sidebar button:focus-visible,
+.sidebar a:focus-visible {
+  outline-color: #8a91fb;
+}

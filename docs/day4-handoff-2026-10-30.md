@@ -1,5 +1,7 @@
 # Day 4 handoff — Friday 30 October 2026
 
+> **Current state (updated 30 Oct 2026, Day 4 Phase A).** Day 3 is merged: `main` = `1991ec0`. The starting point below is the historical Day 3 view, kept unchanged. Day 4 work is on three separate branches: `day4/eval04b-owner-label-freeze` (`8fb8da1`, labels frozen and accepted), `day4/eval04c-first-pass-evaluation` (`08b77e4`, first pass accepted as evidence) and `day4/eval04a-ui06-qualification` (accessibility). See `docs/evidence/day4-eval04a/README.md`.
+
 **Starting point:**
 - Day 3 is `DAY_3_ENGINEERING_AND_EVIDENCE_ACCEPTED_PENDING_MERGE`. The accepted HEAD is `66e535d`, plus the documentation closeout on `day3/final-evidence-closeout`.
 - `main` = `6a23fe2` until the owner authorises a fast-forward integration and it is verified.

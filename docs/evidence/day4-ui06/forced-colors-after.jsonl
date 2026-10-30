@@ -1,0 +1,38 @@
+{"state":"import-empty","tag":"button","label":"Import messages01","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"3px"}}
+{"state":"import-empty","tag":"button","label":"Inbox & review02","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"3px"}}
+{"state":"import-empty","tag":"button","label":"Batch results03","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"3px"}}
+{"state":"import-empty","tag":"button","label":"↺ Reset demo","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"3px"}}
+{"state":"import-empty","tag":"input","label":"csvFile (label)","outline":{"style":"solid","width":"3px","color":"rgb(0, 0, 0)","offset":"3px"}}
+{"state":"import-empty","tag":"button","label":"Load 6-message sample","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"3px"}}
+{"state":"import-empty","tag":"button","label":"Test invalid rows","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"3px"}}
+{"state":"import-empty","tag":"input","label":"manual-id","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"2px"}}
+{"state":"import-empty","tag":"input","label":"manual-name","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"2px"}}
+{"state":"import-empty","tag":"input","label":"manual-subject","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"2px"}}
+{"state":"import-empty","tag":"textarea","label":"manual-message","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"2px"}}
+{"state":"import-empty","tag":"button","label":"Validate manual message","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"3px"}}
+{"state":"inbox-review","tag":"button","label":"Import messages01","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"3px"}}
+{"state":"inbox-review","tag":"button","label":"Inbox & review02","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"3px"}}
+{"state":"inbox-review","tag":"button","label":"Batch results03","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"3px"}}
+{"state":"inbox-review","tag":"button","label":"↺ Reset demo","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"3px"}}
+{"state":"inbox-review","tag":"button","label":"Failed queue (1)","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"3px"}}
+{"state":"inbox-review","tag":"button","label":"Retry failed","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"3px"}}
+{"state":"inbox-review","tag":"button","label":"View results ↗","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"3px"}}
+{"state":"inbox-review","tag":"select","label":"AllCompletedFailed","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"2px"}}
+{"state":"inbox-review","tag":"select","label":"AllPendingApprovedRejected","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"2px"}}
+{"state":"inbox-review","tag":"input","label":"INPUT","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"3px"}}
+{"state":"inbox-review","tag":"button","label":"AOAda OkaforPendingInterview change⚠ Needs attention","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"3px"}}
+{"state":"inbox-review","tag":"button","label":"DCDavid ChenPendingLink problem and schedule⚠ Needs attentio","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"3px"}}
+{"state":"inbox-review","tag":"button","label":"SJSarah JamesPendingHiring outcome✕ Blocked","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"3px"}}
+{"state":"inbox-review","tag":"button","label":"GBGrace BelloPendingApplication update","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"3px"}}
+{"state":"inbox-review","tag":"button","label":"COChidi OkoroPendingWithdrawal request","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"3px"}}
+{"state":"inbox-review","tag":"select","label":"Application statusInterview schedulingJob informationDocumen","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"2px"}}
+{"state":"inbox-review","tag":"input","label":"INPUT","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"2px"}}
+{"state":"inbox-review","tag":"input","label":"INPUT","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"2px"}}
+{"state":"inbox-review","tag":"input","label":"INPUT","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"2px"}}
+{"state":"inbox-review","tag":"input","label":"INPUT","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"2px"}}
+{"state":"inbox-review","tag":"input","label":"INPUT","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"2px"}}
+{"state":"inbox-review","tag":"textarea","label":"Hi Ada, thanks for letting us know. Could you share some alt","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"2px"}}
+{"state":"inbox-review","tag":"summary","label":"View preserved original AI output","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"3px"}}
+{"state":"inbox-review","tag":"button","label":"Reject draft","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"3px"}}
+{"state":"inbox-review","tag":"button","label":"Approve draft","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"3px"}}
+{"state":"inbox-review","tag":"button","label":"Next pending →","outline":{"style":"solid","width":"3px","color":"rgba(5, 0, 73, 0.8)","offset":"3px"}}
