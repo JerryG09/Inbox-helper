@@ -1,0 +1,11 @@
+# Day 4 — Additional unlearning observations (30 October 2026)
+
+**Status:** Submission source notes, not evidence of a fully closed Day 4. Append after the four existing observations in `docs/unlearning/day4-observations.md` during authorized integration; do not overwrite them.
+
+| What I assumed | What the evidence actually showed | What I changed in my working method |
+|---|---|---|
+| If model classification accuracy improves, its drafted responses are safe enough | On 30 genuinely processed held-out messages, Haiku reached **25/30 strict accuracy**, yet **11 drafts falsely claimed a recruiter handoff** and H025 acknowledged a retracted withdrawal request. A blocked-draft detector caught neither pattern | Judge *task completion* and *workflow truthfulness* separately from classification scores. Keep every draft pending human review; add deterministic guards only under a separately tested and authorized change. Evidence: EVAL-04C raw outputs and R-HANDOFF/R-CONTRA register |
+| A frozen pixel-perfect UI is an unquestionable quality target | A11Y-05/06/07 found low-contrast focus, text and essential field borders in the approved V1.1 design. Fixing contrast necessarily changes ordinary screenshot pixels | Preserve the frozen reference for provenance, but use explicit owner-approved accessibility exceptions, measured contrast and targeted parity controls. Do not secretly weaken thresholds or rewrite the reference. Evidence: UI-06C contrast inventory and parity classification |
+| A full suite's pass/fail number accurately distinguishes regressions | The 7.3-hour full run included 236 expected legacy parity failures and 15 reported environment timeouts; targeted checks were green, but the unchanged suite remains red | Separate functional failures, known intentional visual differences, environmental interruptions and unverified tests. Document every category and seek authorization before revising the accepted parity gate. Evidence: UI-06C README and full-suite outputs |
+
+**Carry-forward:** The original four Day 4 observations about composited backgrounds, screenshot capture conditions, historical-evidence overwrites and sidebar color remain applicable. No second Haiku run or improved score is implied here.
