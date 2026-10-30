@@ -1,0 +1,552 @@
+{
+  "mode": "genuine",
+  "startedAt": "2026-10-30T10:21:39.294Z",
+  "gitSha": "f87ac90b377321d83ca709246d793e6a4c7e924e",
+  "gitUncommitted": [
+    "?? docs/evidence/day4-eval04c/run-2026-10-30/"
+  ],
+  "dataset": "eval/heldout/day4-candidate-messages-v1.0.json",
+  "datasetSha256": "646128933def19264ef6228bb944083de59e6e2bc4470ef077537d53b674d412",
+  "scoringVersion": "day4-protocol-v1",
+  "scores": {
+    "scoringVersion": "day4-protocol-v1",
+    "N": 30,
+    "completed": 30,
+    "completion": {
+      "num": 30,
+      "den": 30,
+      "value": 1
+    },
+    "strictPrimary": {
+      "overCompleted": {
+        "num": 25,
+        "den": 30,
+        "value": 0.833
+      },
+      "overAll": {
+        "num": 25,
+        "den": 30,
+        "value": 0.833
+      },
+      "misses": [
+        "H003",
+        "H004",
+        "H009",
+        "H025",
+        "H026"
+      ]
+    },
+    "lenientPrimary": {
+      "overCompleted": {
+        "num": 29,
+        "den": 30,
+        "value": 0.967
+      },
+      "overAll": {
+        "num": 29,
+        "den": 30,
+        "value": 0.967
+      },
+      "rescuedByAlternative": [
+        "H003",
+        "H004",
+        "H009",
+        "H026"
+      ]
+    },
+    "confusion": {
+      "application_status": {
+        "application_status": 4,
+        "interview_scheduling": 1,
+        "job_information": 0,
+        "documentation_technical": 0,
+        "withdrawal": 0,
+        "other_unclear": 0,
+        "not_completed": 0
+      },
+      "interview_scheduling": {
+        "application_status": 0,
+        "interview_scheduling": 4,
+        "job_information": 0,
+        "documentation_technical": 0,
+        "withdrawal": 0,
+        "other_unclear": 0,
+        "not_completed": 0
+      },
+      "job_information": {
+        "application_status": 1,
+        "interview_scheduling": 0,
+        "job_information": 5,
+        "documentation_technical": 0,
+        "withdrawal": 0,
+        "other_unclear": 0,
+        "not_completed": 0
+      },
+      "documentation_technical": {
+        "application_status": 0,
+        "interview_scheduling": 1,
+        "job_information": 0,
+        "documentation_technical": 5,
+        "withdrawal": 0,
+        "other_unclear": 0,
+        "not_completed": 0
+      },
+      "withdrawal": {
+        "application_status": 0,
+        "interview_scheduling": 0,
+        "job_information": 0,
+        "documentation_technical": 0,
+        "withdrawal": 3,
+        "other_unclear": 0,
+        "not_completed": 0
+      },
+      "other_unclear": {
+        "application_status": 0,
+        "interview_scheduling": 0,
+        "job_information": 1,
+        "documentation_technical": 0,
+        "withdrawal": 1,
+        "other_unclear": 4,
+        "not_completed": 0
+      }
+    },
+    "perCategoryRecall": {
+      "application_status": {
+        "num": 4,
+        "den": 5,
+        "value": 0.8
+      },
+      "interview_scheduling": {
+        "num": 4,
+        "den": 4,
+        "value": 1
+      },
+      "job_information": {
+        "num": 5,
+        "den": 6,
+        "value": 0.833
+      },
+      "documentation_technical": {
+        "num": 5,
+        "den": 6,
+        "value": 0.833
+      },
+      "withdrawal": {
+        "num": 3,
+        "den": 3,
+        "value": 1
+      },
+      "other_unclear": {
+        "num": 4,
+        "den": 6,
+        "value": 0.667
+      }
+    },
+    "secondary": {
+      "precision": {
+        "num": 7,
+        "den": 17,
+        "value": 0.412
+      },
+      "recall": {
+        "num": 7,
+        "den": 9,
+        "value": 0.778
+      },
+      "f1": 0.539,
+      "truePositives": 7
+    },
+    "multiIntent": {
+      "n": 9,
+      "completed": 9,
+      "strictPrimary": {
+        "num": 7,
+        "den": 9,
+        "value": 0.778
+      },
+      "perItem": [
+        {
+          "id": "H003",
+          "ref": [
+            "interview_scheduling"
+          ],
+          "pred": [
+            "application_status"
+          ]
+        },
+        {
+          "id": "H007",
+          "ref": [
+            "documentation_technical"
+          ],
+          "pred": [
+            "documentation_technical"
+          ]
+        },
+        {
+          "id": "H008",
+          "ref": [
+            "withdrawal"
+          ],
+          "pred": [
+            "job_information",
+            "withdrawal"
+          ]
+        },
+        {
+          "id": "H009",
+          "ref": [
+            "interview_scheduling"
+          ],
+          "pred": [
+            "job_information"
+          ]
+        },
+        {
+          "id": "H012",
+          "ref": [
+            "interview_scheduling"
+          ],
+          "pred": [
+            "interview_scheduling"
+          ]
+        },
+        {
+          "id": "H014",
+          "ref": [
+            "application_status"
+          ],
+          "pred": [
+            "application_status"
+          ]
+        },
+        {
+          "id": "H017",
+          "ref": [
+            "application_status"
+          ],
+          "pred": [
+            "application_status"
+          ]
+        },
+        {
+          "id": "H022",
+          "ref": [
+            "withdrawal"
+          ],
+          "pred": [
+            "withdrawal"
+          ]
+        },
+        {
+          "id": "H024",
+          "ref": [
+            "interview_scheduling"
+          ],
+          "pred": [
+            "interview_scheduling"
+          ]
+        }
+      ]
+    },
+    "otherUnclear": {
+      "correct": {
+        "num": 4,
+        "den": 6,
+        "value": 0.667
+      },
+      "falsePositives": [],
+      "fpRate": {
+        "num": 0,
+        "den": 24,
+        "value": 0
+      }
+    },
+    "attentionProduct": {
+      "recall": {
+        "num": 11,
+        "den": 12,
+        "value": 0.917
+      },
+      "precision": {
+        "num": 11,
+        "den": 22,
+        "value": 0.5
+      },
+      "falsePositives": [
+        "H004",
+        "H006",
+        "H009",
+        "H011",
+        "H012",
+        "H013",
+        "H017",
+        "H020",
+        "H024",
+        "H027",
+        "H029"
+      ],
+      "falseNegatives": [
+        "H023"
+      ]
+    },
+    "attentionServerFlagPresent": {
+      "recall": {
+        "num": 1,
+        "den": 12,
+        "value": 0.083
+      },
+      "precision": {
+        "num": 1,
+        "den": 1,
+        "value": 1
+      },
+      "falsePositives": [],
+      "falseNegatives": [
+        "H005",
+        "H007",
+        "H008",
+        "H010",
+        "H015",
+        "H019",
+        "H022",
+        "H023",
+        "H025",
+        "H026",
+        "H030"
+      ]
+    },
+    "attentionDiscretionaryRefs": [
+      "H010",
+      "H026",
+      "H030"
+    ]
+  },
+  "drafts": {
+    "rows": [
+      {
+        "id": "H001",
+        "words": 53,
+        "blocked": false,
+        "serverFlags": []
+      },
+      {
+        "id": "H002",
+        "words": 63,
+        "blocked": false,
+        "serverFlags": []
+      },
+      {
+        "id": "H003",
+        "words": 45,
+        "blocked": false,
+        "serverFlags": []
+      },
+      {
+        "id": "H004",
+        "words": 53,
+        "blocked": false,
+        "serverFlags": []
+      },
+      {
+        "id": "H005",
+        "words": 66,
+        "blocked": false,
+        "serverFlags": []
+      },
+      {
+        "id": "H006",
+        "words": 41,
+        "blocked": false,
+        "serverFlags": []
+      },
+      {
+        "id": "H007",
+        "words": 44,
+        "blocked": false,
+        "serverFlags": []
+      },
+      {
+        "id": "H008",
+        "words": 77,
+        "blocked": false,
+        "serverFlags": []
+      },
+      {
+        "id": "H009",
+        "words": 42,
+        "blocked": false,
+        "serverFlags": []
+      },
+      {
+        "id": "H010",
+        "words": 49,
+        "blocked": false,
+        "serverFlags": []
+      },
+      {
+        "id": "H011",
+        "words": 39,
+        "blocked": false,
+        "serverFlags": []
+      },
+      {
+        "id": "H012",
+        "words": 61,
+        "blocked": false,
+        "serverFlags": []
+      },
+      {
+        "id": "H013",
+        "words": 41,
+        "blocked": false,
+        "serverFlags": []
+      },
+      {
+        "id": "H014",
+        "words": 46,
+        "blocked": false,
+        "serverFlags": []
+      },
+      {
+        "id": "H015",
+        "words": 54,
+        "blocked": false,
+        "serverFlags": []
+      },
+      {
+        "id": "H016",
+        "words": 37,
+        "blocked": false,
+        "serverFlags": []
+      },
+      {
+        "id": "H017",
+        "words": 81,
+        "blocked": false,
+        "serverFlags": []
+      },
+      {
+        "id": "H018",
+        "words": 52,
+        "blocked": false,
+        "serverFlags": []
+      },
+      {
+        "id": "H019",
+        "words": 69,
+        "blocked": false,
+        "serverFlags": []
+      },
+      {
+        "id": "H020",
+        "words": 61,
+        "blocked": false,
+        "serverFlags": []
+      },
+      {
+        "id": "H021",
+        "words": 50,
+        "blocked": false,
+        "serverFlags": []
+      },
+      {
+        "id": "H022",
+        "words": 45,
+        "blocked": false,
+        "serverFlags": []
+      },
+      {
+        "id": "H023",
+        "words": 49,
+        "blocked": false,
+        "serverFlags": []
+      },
+      {
+        "id": "H024",
+        "words": 58,
+        "blocked": false,
+        "serverFlags": []
+      },
+      {
+        "id": "H025",
+        "words": 63,
+        "blocked": false,
+        "serverFlags": []
+      },
+      {
+        "id": "H026",
+        "words": 50,
+        "blocked": false,
+        "serverFlags": []
+      },
+      {
+        "id": "H027",
+        "words": 32,
+        "blocked": false,
+        "serverFlags": []
+      },
+      {
+        "id": "H028",
+        "words": 39,
+        "blocked": false,
+        "serverFlags": [
+          "Message contains instructions aimed at the AI (treated as untrusted data)"
+        ]
+      },
+      {
+        "id": "H029",
+        "words": 37,
+        "blocked": false,
+        "serverFlags": []
+      },
+      {
+        "id": "H030",
+        "words": 66,
+        "blocked": false,
+        "serverFlags": []
+      }
+    ],
+    "n": 30,
+    "minWords": 32,
+    "medianWords": 50,
+    "maxWords": 81,
+    "under120": {
+      "num": 30,
+      "den": 30,
+      "value": 1
+    },
+    "blocked": []
+  },
+  "operations": {
+    "providerAttemptsWithMeta": 30,
+    "byKind": {
+      "completed": 30
+    },
+    "failuresByCode": {},
+    "models": [
+      "claude-haiku-5-5"
+    ],
+    "stopReasons": [
+      "end_turn"
+    ],
+    "tokens": {
+      "input": 43396,
+      "output": 6860,
+      "nullInput": 0,
+      "nullOutput": 0
+    },
+    "latencyMs": {
+      "min": 1594,
+      "median": 2121.5,
+      "max": 3457
+    },
+    "estimatedCostUsd": 0.00777
+  },
+  "price": {
+    "inputPerMTok": 0.1,
+    "outputPerMTok": 0.5,
+    "source": "https://platform.claude.com/docs/en/about-claude/pricing (Claude Haiku 5.5, prompts <= 100K tokens)"
+  },
+  "ceilingUsd": 0.05
+}

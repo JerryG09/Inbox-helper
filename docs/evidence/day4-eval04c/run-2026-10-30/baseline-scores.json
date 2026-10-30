@@ -1,0 +1,327 @@
+{
+  "mode": "baseline",
+  "startedAt": "2026-10-30T10:20:34.035Z",
+  "gitSha": "f87ac90b377321d83ca709246d793e6a4c7e924e",
+  "gitUncommitted": [],
+  "dataset": "eval/heldout/day4-candidate-messages-v1.0.json",
+  "datasetSha256": "646128933def19264ef6228bb944083de59e6e2bc4470ef077537d53b674d412",
+  "scoringVersion": "day4-protocol-v1",
+  "scores": {
+    "scoringVersion": "day4-protocol-v1",
+    "N": 30,
+    "completed": 30,
+    "completion": {
+      "num": 30,
+      "den": 30,
+      "value": 1
+    },
+    "strictPrimary": {
+      "overCompleted": {
+        "num": 13,
+        "den": 30,
+        "value": 0.433
+      },
+      "overAll": {
+        "num": 13,
+        "den": 30,
+        "value": 0.433
+      },
+      "misses": [
+        "H002",
+        "H003",
+        "H004",
+        "H005",
+        "H006",
+        "H007",
+        "H009",
+        "H011",
+        "H012",
+        "H019",
+        "H020",
+        "H021",
+        "H022",
+        "H024",
+        "H025",
+        "H027",
+        "H028"
+      ]
+    },
+    "lenientPrimary": {
+      "overCompleted": {
+        "num": 16,
+        "den": 30,
+        "value": 0.533
+      },
+      "overAll": {
+        "num": 16,
+        "den": 30,
+        "value": 0.533
+      },
+      "rescuedByAlternative": [
+        "H004",
+        "H012",
+        "H022"
+      ]
+    },
+    "confusion": {
+      "application_status": {
+        "application_status": 1,
+        "interview_scheduling": 0,
+        "job_information": 1,
+        "documentation_technical": 1,
+        "withdrawal": 1,
+        "other_unclear": 1,
+        "not_completed": 0
+      },
+      "interview_scheduling": {
+        "application_status": 0,
+        "interview_scheduling": 2,
+        "job_information": 0,
+        "documentation_technical": 0,
+        "withdrawal": 0,
+        "other_unclear": 2,
+        "not_completed": 0
+      },
+      "job_information": {
+        "application_status": 1,
+        "interview_scheduling": 1,
+        "job_information": 3,
+        "documentation_technical": 0,
+        "withdrawal": 0,
+        "other_unclear": 1,
+        "not_completed": 0
+      },
+      "documentation_technical": {
+        "application_status": 0,
+        "interview_scheduling": 0,
+        "job_information": 0,
+        "documentation_technical": 3,
+        "withdrawal": 0,
+        "other_unclear": 3,
+        "not_completed": 0
+      },
+      "withdrawal": {
+        "application_status": 1,
+        "interview_scheduling": 1,
+        "job_information": 0,
+        "documentation_technical": 0,
+        "withdrawal": 1,
+        "other_unclear": 0,
+        "not_completed": 0
+      },
+      "other_unclear": {
+        "application_status": 1,
+        "interview_scheduling": 1,
+        "job_information": 0,
+        "documentation_technical": 0,
+        "withdrawal": 1,
+        "other_unclear": 3,
+        "not_completed": 0
+      }
+    },
+    "perCategoryRecall": {
+      "application_status": {
+        "num": 1,
+        "den": 5,
+        "value": 0.2
+      },
+      "interview_scheduling": {
+        "num": 2,
+        "den": 4,
+        "value": 0.5
+      },
+      "job_information": {
+        "num": 3,
+        "den": 6,
+        "value": 0.5
+      },
+      "documentation_technical": {
+        "num": 3,
+        "den": 6,
+        "value": 0.5
+      },
+      "withdrawal": {
+        "num": 1,
+        "den": 3,
+        "value": 0.333
+      },
+      "other_unclear": {
+        "num": 3,
+        "den": 6,
+        "value": 0.5
+      }
+    },
+    "secondary": {
+      "precision": {
+        "num": 1,
+        "den": 6,
+        "value": 0.167
+      },
+      "recall": {
+        "num": 1,
+        "den": 9,
+        "value": 0.111
+      },
+      "f1": 0.133,
+      "truePositives": 1
+    },
+    "multiIntent": {
+      "n": 9,
+      "completed": 9,
+      "strictPrimary": {
+        "num": 3,
+        "den": 9,
+        "value": 0.333
+      },
+      "perItem": [
+        {
+          "id": "H003",
+          "ref": [
+            "interview_scheduling"
+          ],
+          "pred": []
+        },
+        {
+          "id": "H007",
+          "ref": [
+            "documentation_technical"
+          ],
+          "pred": []
+        },
+        {
+          "id": "H008",
+          "ref": [
+            "withdrawal"
+          ],
+          "pred": [
+            "job_information"
+          ]
+        },
+        {
+          "id": "H009",
+          "ref": [
+            "interview_scheduling"
+          ],
+          "pred": []
+        },
+        {
+          "id": "H012",
+          "ref": [
+            "interview_scheduling"
+          ],
+          "pred": []
+        },
+        {
+          "id": "H014",
+          "ref": [
+            "application_status"
+          ],
+          "pred": []
+        },
+        {
+          "id": "H017",
+          "ref": [
+            "application_status"
+          ],
+          "pred": [
+            "application_status"
+          ]
+        },
+        {
+          "id": "H022",
+          "ref": [
+            "withdrawal"
+          ],
+          "pred": []
+        },
+        {
+          "id": "H024",
+          "ref": [
+            "interview_scheduling"
+          ],
+          "pred": []
+        }
+      ]
+    },
+    "otherUnclear": {
+      "correct": {
+        "num": 3,
+        "den": 6,
+        "value": 0.5
+      },
+      "falsePositives": [
+        "H003",
+        "H006",
+        "H007",
+        "H009",
+        "H011",
+        "H019",
+        "H020"
+      ],
+      "fpRate": {
+        "num": 7,
+        "den": 24,
+        "value": 0.292
+      }
+    },
+    "attentionProduct": {
+      "recall": {
+        "num": 0,
+        "den": 12,
+        "value": 0
+      },
+      "precision": {
+        "num": 0,
+        "den": 0,
+        "value": null
+      },
+      "falsePositives": [],
+      "falseNegatives": [
+        "H005",
+        "H007",
+        "H008",
+        "H010",
+        "H015",
+        "H019",
+        "H022",
+        "H023",
+        "H025",
+        "H026",
+        "H028",
+        "H030"
+      ]
+    },
+    "attentionServerFlagPresent": {
+      "recall": {
+        "num": 0,
+        "den": 12,
+        "value": 0
+      },
+      "precision": {
+        "num": 0,
+        "den": 0,
+        "value": null
+      },
+      "falsePositives": [],
+      "falseNegatives": [
+        "H005",
+        "H007",
+        "H008",
+        "H010",
+        "H015",
+        "H019",
+        "H022",
+        "H023",
+        "H025",
+        "H026",
+        "H028",
+        "H030"
+      ]
+    },
+    "attentionDiscretionaryRefs": [
+      "H010",
+      "H026",
+      "H030"
+    ]
+  }
+}

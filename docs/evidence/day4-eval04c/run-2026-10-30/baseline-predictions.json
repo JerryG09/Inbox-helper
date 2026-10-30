@@ -1,0 +1,324 @@
+{
+  "mode": "baseline",
+  "startedAt": "2026-10-30T10:20:34.035Z",
+  "gitSha": "f87ac90b377321d83ca709246d793e6a4c7e924e",
+  "gitUncommitted": [],
+  "dataset": "eval/heldout/day4-candidate-messages-v1.0.json",
+  "datasetSha256": "646128933def19264ef6228bb944083de59e6e2bc4470ef077537d53b674d412",
+  "scoringVersion": "day4-protocol-v1",
+  "implementation": "src/lib/classify/baseline.ts (unchanged)",
+  "finishedAt": "2026-10-30T10:20:34.037Z",
+  "predictions": [
+    {
+      "id": "H001",
+      "output": {
+        "primary_intent": "application_status",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "H002",
+      "output": {
+        "primary_intent": "documentation_technical",
+        "secondary_intents": [
+          "application_status",
+          "job_information"
+        ],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "H003",
+      "output": {
+        "primary_intent": "other_unclear",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "H004",
+      "output": {
+        "primary_intent": "application_status",
+        "secondary_intents": [
+          "job_information"
+        ],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "H005",
+      "output": {
+        "primary_intent": "job_information",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "H006",
+      "output": {
+        "primary_intent": "other_unclear",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "H007",
+      "output": {
+        "primary_intent": "other_unclear",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "H008",
+      "output": {
+        "primary_intent": "interview_scheduling",
+        "secondary_intents": [
+          "job_information"
+        ],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "H009",
+      "output": {
+        "primary_intent": "other_unclear",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "H010",
+      "output": {
+        "primary_intent": "interview_scheduling",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "H011",
+      "output": {
+        "primary_intent": "other_unclear",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "H012",
+      "output": {
+        "primary_intent": "interview_scheduling",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "H013",
+      "output": {
+        "primary_intent": "job_information",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "H014",
+      "output": {
+        "primary_intent": "job_information",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "H015",
+      "output": {
+        "primary_intent": "job_information",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "H016",
+      "output": {
+        "primary_intent": "documentation_technical",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "H017",
+      "output": {
+        "primary_intent": "documentation_technical",
+        "secondary_intents": [
+          "application_status"
+        ],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "H018",
+      "output": {
+        "primary_intent": "documentation_technical",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "H019",
+      "output": {
+        "primary_intent": "other_unclear",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "H020",
+      "output": {
+        "primary_intent": "other_unclear",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "H021",
+      "output": {
+        "primary_intent": "application_status",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "H022",
+      "output": {
+        "primary_intent": "withdrawal",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "H023",
+      "output": {
+        "primary_intent": "withdrawal",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "H024",
+      "output": {
+        "primary_intent": "interview_scheduling",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "H025",
+      "output": {
+        "primary_intent": "withdrawal",
+        "secondary_intents": [
+          "application_status"
+        ],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "H026",
+      "output": {
+        "primary_intent": "other_unclear",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "H027",
+      "output": {
+        "primary_intent": "interview_scheduling",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "H028",
+      "output": {
+        "primary_intent": "application_status",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "H029",
+      "output": {
+        "primary_intent": "other_unclear",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    },
+    {
+      "id": "H030",
+      "output": {
+        "primary_intent": "other_unclear",
+        "secondary_intents": [],
+        "needs_attention": false,
+        "attention_reasons": [],
+        "summary": "Deterministic keyword baseline — not an AI classification."
+      }
+    }
+  ]
+}
