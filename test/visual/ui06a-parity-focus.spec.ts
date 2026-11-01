@@ -1,16 +1,16 @@
-// UI-06A parity classification for the 6 review states (x 4 widths) that the unchanged parity harness reports as
-// different after UX-A11Y-01. Each state is replayed on the app and on the unchanged approved HTML, then compared
-// (1) as captured, focus kept — the intentional focus-ring exception, recorded with its diff bounding box;
-// (2) after blurring the focused element in BOTH pages — the unfocused presentation, gated at 0 differing pixels.
-// The parity harness, its thresholds and its cases are not modified.
+// UI-06A parity classification for 6 review states x 4 widths. Focused and unfocused app captures must
+// match the original approved HTML + owner-approved override stylesheet at zero pixels. Comparisons
+// against the unmodified HTML are reported separately, preserving the original-reference differences.
+// Integration: controlled captures include the approved stylesheet; original differences are separately reported. No tolerance or masks.
 import { expect, test, type Page } from "@playwright/test";
-import { appendFileSync, mkdirSync } from "node:fs";
+import { appendFileSync, mkdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { PNG } from "pngjs";
 import pixelmatch from "pixelmatch";
 
 const CANONICAL = "file://" + path.resolve("reference/hifi-v1.1/prototype/MUST-Inbox-Helper-HiFi-V1.1-APPROVED.html");
-const OUT = "docs/evidence/day3-ui06a";
+const OUT = "test-results/final-accessibility-focus";
+const OVERRIDE = readFileSync("src/styles/ui-06a-accessibility.css", "utf8");
 type Step = (page: Page) => Promise<void>;
 const seq = (...s: Step[]): Step => async (page) => { for (const x of s) await x(page); };
 const click = (t: string): Step => (page) => page.getByRole("button", { name: t, exact: true }).click();
@@ -31,8 +31,9 @@ const STATES: Record<string, Step> = {
 };
 const WIDTHS: [number, number][] = [[1440, 900], [390, 844], [320, 700], [768, 1024]];
 
-async function capture(page: Page, url: string, steps: Step, blur: boolean) {
+async function capture(page: Page, url: string, steps: Step, blur: boolean, controlled = false) {
   await page.goto(url);
+  if (controlled) await page.addStyleTag({ content: OVERRIDE });
   await steps(page);
   // Let post-render focus management settle (the app restores focus to the corrected control after re-render).
   await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(r, 100)))));
@@ -55,16 +56,22 @@ function compare(a: PNG, b: PNG) {
 }
 
 for (const [name, steps] of Object.entries(STATES)) for (const [w, h] of WIDTHS) {
-  test(`${name}-${w}: focused diff is the focus ring only; unfocused presentation is pixel-identical`, async ({ page }) => {
+  test(`${name}-${w}: approved CSS explains original differences; focused and unfocused control are exact`, async ({ page }) => {
     await page.setViewportSize({ width: w, height: h });
     const appF = await capture(page, "/", steps, false);
-    const canF = await capture(page, CANONICAL, steps, false);
+    const canF = await capture(page, CANONICAL, steps, false, true);
     const appU = await capture(page, "/", steps, true);
-    const canU = await capture(page, CANONICAL, steps, true);
+    const canU = await capture(page, CANONICAL, steps, true, true);
+    const originalF = await capture(page, CANONICAL, steps, false);
+    const originalU = await capture(page, CANONICAL, steps, true);
+    const originalFocused = compare(appF.png, originalF.png);
+    const originalUnfocused = compare(appU.png, originalU.png);
+    const approvedStylesheetDifferences = compare(canF.png, originalF.png);
     const focusedState = compare(appF.png, canF.png);
     const unfocusedState = compare(appU.png, canU.png);
     mkdirSync(OUT, { recursive: true }); // one line per case, written immediately (a failure restarts the worker)
-    appendFileSync(`${OUT}/parity-focus-classification.jsonl`, JSON.stringify({ case: `${name}-${w}`, focusedElement: appF.focused, focusedState, unfocusedState }) + "\n");
+    appendFileSync(`${OUT}/parity-focus-classification.jsonl`, JSON.stringify({ case: `${name}-${w}`, focusedElement: appF.focused, focusedState, unfocusedState, originalFocused, originalUnfocused, approvedStylesheetDifferences }) + "\n");
+    expect(focusedState, "focused controlled baseline must be exact").toMatchObject({ sizeMatch: true, diffPixels: 0 });
     expect(unfocusedState, "unfocused presentation must match the approved HTML exactly").toMatchObject({ sizeMatch: true, diffPixels: 0 });
   });
 }

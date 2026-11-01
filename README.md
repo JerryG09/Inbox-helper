@@ -76,10 +76,10 @@ These figures describe a single run on synthetic, Claude-authored data. They are
 
 ## Accessibility limitations
 
-- `main` includes the Day 3 accessibility corrections (UX-A11Y-01/02/03, owner-accepted).
-- The Phase A focus-ring fix (A11Y-04, `5a951f5`) and the UI-06C contrast fixes (A11Y-05/06/07, `4e3be63`) are on separate branches and are **not in `main`**. UI-06C's visual exceptions are still awaiting owner acceptance.
+- The application includes the owner-accepted Day 3 corrections (UX-A11Y-01/02/03), A11Y-04 focus correction and A11Y-05/06/07 contrast corrections.
+- A11Y-04/05/06/07 use the exact approved stylesheet at `4e3be63`; owner visual acceptance was recorded on 1 November 2026. Select borders remain unchanged.
 - Only Chromium and emulated forced-colors were tested. Screen reader, Safari/Firefox, real zoom and OS high contrast are not verified.
-- **No WCAG 2.2 AA conformance is claimed.** The legacy full browser parity suite is not green on the UI-06C branch.
+- **No WCAG 2.2 AA conformance is claimed.** The original unmodified prototype differs intentionally. Controlled parity uses that immutable prototype plus the approved stylesheet, with only the reproduced 12-pixel, 1/255 exception in `import-empty-1440`.
 
 ## Evidence
 

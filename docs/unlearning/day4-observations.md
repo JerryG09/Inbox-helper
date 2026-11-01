@@ -1,0 +1,8 @@
+# Day 4 unlearning observations (Phase A)
+
+These are evidence-backed changes in engineering judgement only. Details are in `docs/evidence/day4-eval04a/README.md` (steps 8–11).
+
+1. **A contrast tool is only as good as its background model.** My first text-contrast scan composited translucent backgrounds over white, which reported the navy sidebar's light text as failing at 1.1–3.9:1. Compositing over the real ancestor layers removed every sidebar false failure and left only genuine ones. *Changed judgement:* validate a measuring instrument on a known-good region before trusting its failures.
+2. **A parity comparison must reproduce the harness's capture conditions.** Viewport-only captures at different scroll positions produced about 144k-px "differences" and an 8 px residue that were not real. Matching the harness (`scrollTo(0,0)`, full page) made every difference localise to the focus ring, with a 0 px control. *Changed judgement:* when a diff is surprising, check the capture before suspecting the product.
+3. **Running the full regression suite can rewrite accepted historical evidence.** `npm run test:visual` overwrites two committed Day 3 evidence files. *Changed judgement:* check `git status` for evidence paths after every suite run and restore immediately; a green test run is not a clean tree.
+4. **A "fix the low-contrast colour everywhere" instinct would have regressed the sidebar.** Using `#4f46e5` everywhere drops the navy sidebar from 6.03:1 to 2.68:1. *Changed judgement:* measure a contrast fix against every adjacent background it will sit on, not just the one in the bug report.

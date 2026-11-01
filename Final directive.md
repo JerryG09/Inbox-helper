@@ -126,10 +126,7 @@ For each message, the model returns:
 
 - **Target:** WCAG 2.2 A/AA. The product supports keyboard operation, visible focus, live-region announcements and forced-colors support.
 - **Contrast exceptions:** these go in `src/styles/ui-06a-accessibility.css`. They are measured and need owner approval. The frozen `src/styles/hifi-v1.1.css` must stay byte-identical to the approved prototype.
-- **In `main`:** the Day 3 accepted corrections (UX-A11Y-01/02/03).
-- **Not in `main`:**
-  - The A11Y-04 focus-ring correction (Phase A `5a951f5`, owner-accepted).
-  - The A11Y-05/06/07 contrast corrections (UI-06C `4e3be63`, owner visual acceptance pending).
+- **Integrated application:** Day 3 UX-A11Y-01/02/03 and A11Y-04/05/06/07, using the exact owner-approved stylesheet at `4e3be63`. Owner acceptance recorded 1 November 2026; select borders unchanged.
 - No conformance claim may be made without manual screen-reader, multi-browser, zoom and OS high-contrast checks.
 
 ## 13. Known limitations (must be disclosed)
@@ -139,11 +136,11 @@ For each message, the model returns:
 - **Detector gaps:** the detector is pattern-based and has known misses (KL-1/2/3, R-INJ, R-WD, R-PII). Nine expected-failure pins document these.
 - **Attention flags:** the model over-flags attention (11 false positives in 30).
 - **Evaluation limits:** n = 30, synthetic and Claude-authored; labels are not blind and come from a single adjudicator. No production-performance or production-safety claim is made.
-- **No WCAG conformance claim.** The unchanged full browser parity suite is not green on the UI-06C branch.
+- **No WCAG conformance claim.** Original prototype differences remain reported. Controlled parity applies the approved stylesheet, with only the independently reproduced 12-pixel, 1/255 `import-empty-1440` residue allowed.
 
 ## 14. Next work, if continued
 
 1. **SAFE-04:** remove the premature handoff wording and handle retracted withdrawals; add regression tests; re-evaluate only on a new authorized run.
-2. **Integration:** after owner visual acceptance, integrate Phase A and UI-06C, and decide what happens to the parity gate.
+2. **Final recordings:** Loom and five-minute demo remain `PENDING_OWNER_RECORDING`; MUST submission is not complete.
 3. **Manual accessibility checks:** screen reader, Safari/Firefox, zoom and high contrast.
 4. **Security gate:** authentication and rate limiting before any deployment.

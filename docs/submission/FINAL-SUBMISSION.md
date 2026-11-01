@@ -63,8 +63,8 @@ Evidence: [`docs/evidence/day4-eval04c/`](../evidence/day4-eval04c/).
 - **Human review:** human safety review of the drafts is incomplete.
 
 **Accessibility:**
-- `main` has the Day 3 accepted fixes only.
-- A11Y-04 (Phase A `5a951f5`) and A11Y-05/06/07 (UI-06C `4e3be63`, visual acceptance pending) are on separate branches and not merged.
+- The application integrates Day 3 and A11Y-04/05/06/07 using the exact approved stylesheet at `4e3be63`. Owner acceptance recorded 1 November 2026; select borders unchanged.
+- Controlled parity uses the immutable original prototype plus the accepted stylesheet. Original-reference differences remain reported; only the reproduced 12-pixel, 1/255 residue in `import-empty-1440` is permitted.
 - Manual screen-reader, browser, zoom and high-contrast checks have not been done.
 - **No WCAG conformance claim.**
 
@@ -74,10 +74,10 @@ Evidence: [`docs/evidence/day4-eval04c/`](../evidence/day4-eval04c/).
 
 ## Verification (1 Nov 2026, cost-free checks)
 
-Recorded in the Day 5 final report. No Anthropic calls, builds or browser suites were run.
+The earlier submission-preparation checks ran without Anthropic calls, builds or browser suites. Subsequent accessibility integration verification is recorded in the appended Day 5 log; no new model evaluation is authorized.
 
 ## To complete the submission (owner)
 
-1. Record both videos using [`recording-scripts.md`](recording-scripts.md).
+1. Record both videos using [`recording-scripts.md`](recording-scripts.md), with the current accessibility status above replacing the earlier script statement that contrast fixes are unmerged. Both recordings remain `PENDING_OWNER_RECORDING`; the MUST submission is not complete.
 2. Replace `<LOOM_URL_PENDING>` and `<DEMO_URL_PENDING>` in this file and in [`submission-manifest.md`](submission-manifest.md), then push.
 3. Submit the repository URL, the two video URLs and the document links on the official MUST portal.

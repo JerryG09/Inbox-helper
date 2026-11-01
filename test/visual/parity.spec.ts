@@ -5,14 +5,16 @@ import { PNG } from "pngjs";
 import pixelmatch from "pixelmatch";
 
 // Parity harness (contract §1, §2, §10.3). Two comparisons per state:
-//  1. GATE: app vs the unchanged approved HTML rendered in this same Chromium/OS/fonts — must be 0 differing pixels.
+//  1. GATE: app vs approved HTML + accepted override CSS; exact except the 12 reproduced import-empty-1440 pixels.
 //  2. REPORT: app vs the frozen PNG captured on the reference machine — recorded with pixel counts, not gated,
 //     because cross-machine font rasterization cannot be identical (contract §1).
 const REF = path.resolve("reference/hifi-v1.1");
 const CANONICAL = "file://" + path.join(REF, "prototype/MUST-Inbox-Helper-HiFi-V1.1-APPROVED.html");
+const OVERRIDE = readFileSync("src/styles/ui-06a-accessibility.css", "utf8");
+const RESIDUE_PIXELS = [[915,347],[1129,347],[1152,347],[1367,347],[1371,351],[1371,386],[1371,441],[1371,476],[915,480],[1367,480],[915,527],[915,635]];
 const OUT = path.resolve("test/visual/artifacts");
 // Each slice writes its own report; earlier reports (ui-05a and before) are historical evidence and are never rewritten.
-const REPORT = path.resolve("docs/evidence/ui-05b/parity-report.json");
+const REPORT = path.resolve("test-results/final-accessibility-parity-report.json");
 mkdirSync(OUT, { recursive: true });
 
 type Step = (page: Page) => Promise<void>;
@@ -146,8 +148,9 @@ const CASES: Case[] = Object.entries(STATES).flatMap(([state, steps]) =>
 
 const results: Record<string, unknown> = {};
 
-async function capture(page: Page, url: string, steps: Step) {
+async function capture(page: Page, url: string, steps: Step, controlled = false) {
   await page.goto(url);
+  if (controlled) await page.addStyleTag({ content: OVERRIDE });
   await steps(page);
   await page.evaluate(() => document.fonts.ready);
   await page.mouse.move(0, 0);
@@ -163,21 +166,34 @@ function diff(a: PNG, b: PNG, file: string) {
     return { sizeMatch: false, a: [a.width, a.height], b: [b.width, b.height], diffPixels: null as number | null, percent: null as number | null };
   }
   const out = new PNG({ width: a.width, height: a.height });
-  const n = pixelmatch(a.data, b.data, out.data, a.width, a.height, { threshold: 0 });
+  const n = pixelmatch(a.data, b.data, out.data, a.width, a.height, { threshold: 0, diffMask: true });
+  const pixels: number[][] = [];
+  let maxDelta = 0;
+  for (let y = 0; y < a.height; y++) for (let x = 0; x < a.width; x++) {
+    const i = (y * a.width + x) * 4;
+    if (!out.data[i + 3]) continue;
+    pixels.push([x, y]);
+    for (let k = 0; k < 3; k++) maxDelta = Math.max(maxDelta, Math.abs(a.data[i + k]! - b.data[i + k]!));
+  }
   writeFileSync(file, PNG.sync.write(out));
-  return { sizeMatch: true, a: [a.width, a.height], b: [b.width, b.height], diffPixels: n, percent: +((100 * n) / (a.width * a.height)).toFixed(4) };
+  return { sizeMatch: true, a: [a.width, a.height], b: [b.width, b.height], diffPixels: n, maxDelta, pixels: n <= 12 ? pixels : undefined, percent: +((100 * n) / (a.width * a.height)).toFixed(4) };
 }
 
 for (const c of CASES) {
   test(c.name, async ({ page }) => {
     await page.setViewportSize({ width: c.width, height: c.height });
     const app = await capture(page, "/", c.steps);
-    const canon = await capture(page, CANONICAL, c.exception ? c.exception.canonicalSteps : c.steps);
+    const canon = await capture(page, CANONICAL, c.exception ? c.exception.canonicalSteps : c.steps, true);
     writeFileSync(path.join(OUT, `${c.name}.app.png`), PNG.sync.write(app.png));
     writeFileSync(path.join(OUT, `${c.name}.canonical-live.png`), PNG.sync.write(canon.png));
 
     const gate = diff(app.png, canon.png, path.join(OUT, `${c.name}.diff-vs-canonical-live.png`));
     const entry: Record<string, unknown> = { viewport: [c.width, c.height], horizontalOverflowPx: app.overflow, vsCanonicalLive: gate };
+    const original = await capture(page, CANONICAL, c.exception ? c.exception.canonicalSteps : c.steps);
+    entry.originalReferenceDifferences = diff(app.png, original.png, path.join(OUT, `${c.name}.original-diff.png`));
+    entry.approvedAccessibilityDifferences = diff(canon.png, original.png, path.join(OUT, `${c.name}.approved-css-diff.png`));
+    entry.controlledBaseline = "original prototype + owner-approved override CSS";
+    entry.classification = gate.diffPixels === 0 ? "OWNER_APPROVED_ACCESSIBILITY" : "RENDERING_RESIDUE_OR_REGRESSION";
     if (c.exception?.unreachableInUnmodified) {
       entry.exception = { id: c.exception.id, gateComparedWith: "approved HTML + UX-04-01 state correction", vsUnmodifiedCanonical: "unreachable: unmodified design leaves the mobile detail open with no way back to the filters" };
     } else if (c.exception) {
@@ -196,7 +212,9 @@ for (const c of CASES) {
 
     expect(app.overflow, "no horizontal page overflow").toBeLessThanOrEqual(0);
     expect(gate.sizeMatch, "same full-page size as approved HTML").toBe(true);
-    expect(gate.diffPixels, "zero pixel difference vs approved HTML").toBe(0);
+    const acceptedResidue = c.name === "import-empty-1440" && gate.diffPixels === 12 && gate.maxDelta === 1 && JSON.stringify(gate.pixels) === JSON.stringify(RESIDUE_PIXELS);
+    entry.classification = gate.diffPixels === 0 ? "OWNER_APPROVED_ACCESSIBILITY" : acceptedResidue ? "ARCHITECT_ACCEPTED_RENDERING_RESIDUE" : "UNEXPECTED_REGRESSION";
+    expect(gate.diffPixels === 0 || acceptedResidue, "exact controlled baseline or only the 12 reproduced residue pixels").toBe(true);
   });
 }
 

@@ -13,7 +13,7 @@
 | 1 | Loom walkthrough of the AI-native workflow | **PENDING_OWNER_RECORDING** | URL: `<LOOM_URL_PENDING>`. Script: [`recording-scripts.md`](recording-scripts.md); scene plan: [`recording-shotlist.md`](recording-shotlist.md) |
 | 2 | `intent.md` | **COMPLETE** (owner-approved 27 Oct; copied verbatim) | [`/intent.md`](../../intent.md) (original kept at [`docs/intent.md`](../intent.md)) |
 | 3 | `Final directive.md` | **COMPLETE** (prepared 1 Nov from repository evidence) | [`/Final directive.md`](../../Final%20directive.md) |
-| 4 | Working code + accurate README | **COMPLETE** (`main` application code as of Day 3, plus the Day 4 evaluation code and evidence; UI-06C and Phase A not merged) | [`/README.md`](../../README.md) |
+| 4 | Working code + accurate README | **COMPLETE** (application includes owner-approved A11Y-04/05/06/07 with Day 3 corrections; Day 4 evaluation code and genuine evidence preserved) | [`/README.md`](../../README.md) |
 | 5 | Five dated daily logs | **COMPLETE** (5 of 5; the Day 5 log was written retrospectively on 1 Nov and says so) | [`docs/daily-log/`](../daily-log/) |
 | 6 | Five-minute product demo | **PENDING_OWNER_RECORDING** | URL: `<DEMO_URL_PENDING>`. Script: [`recording-scripts.md`](recording-scripts.md) |
 | 7 | One-page unlearning note | **COMPLETE** | [`one-page-unlearning-note.md`](one-page-unlearning-note.md) |
